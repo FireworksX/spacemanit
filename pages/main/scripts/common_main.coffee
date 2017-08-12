@@ -22,28 +22,31 @@ vm = new Vue
 		login: {}
 	methods:
 		registerF: ->
-			@$http.post("includes/register.php?register=", @dataAuth).then((res) ->
-				console.log res.data
+			@$http.post("pages/main/includes/register.php?register=", @dataAuth).then((res) ->
+				console.log res
 				modalWindow(res.data)
 				(error) ->
+					console.log error
 					modalWindow('300'))
 		loginF: ->
-			@$http.post("includes/login.php?login=", @dataAuth).then((res) ->
+			@$http.post("pages/main/includes/login.php?login=", @dataAuth).then((res) ->
 #				@id = res.data.split '|'
 #				console.log @id
+				console.log res
 				modalWindow(res.data);										  
-			(error) -> 
-				modalRegister('302'))
+			(error) ->
+				console.log error
+				modalWindow('302'))
 
 type = 'reg'
 
 $('.register__have').on 'click', ->
 	if type is 'reg'
-		$('.body-login').fadeOut()
+		$('.body-mail').fadeOut()
 		$(@).text('Я хочу зарегистрироваться')
 		type = 'log'
 	else 
-		$('.body-login').fadeIn()
+		$('.body-mail').fadeIn()
 		$(@).text('У меня уже есть аккаунт')
 		type = 'reg'
 
@@ -56,28 +59,47 @@ $('.body-start').on 'click', ->
 		type = 'log'
 	
 modalWindow = (value) ->
+	self = $('.register__modal')
+	console.log value
+	setTimeout( ->
+		self.fadeOut()
+	, 3000 )
 	switch value
 		when '200'
-			console.info "Пользователь: #{vm.$data.dataAuth.login} успешно зарегистрирован!"
-				
+			self.text("Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!")
+			self.addClass('register__modal_good')
+			self.fadeIn()
+
 		when '201'
-			console.info "Пользователь: #{vm.$data.dataAuth.login} успешно авторизирован!"
+			self.text("Пользователь: #{vm.dataAuth.login} успешно авторизирован!")
+			self.addClass('register__modal_good')
 			window.location = '/pages/app'
-		
+			self.fadeIn()
+
 		when '300'
-			console.error 'Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.'
-				
+			self.text('Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.')
+			self.addClass('register__modal_bad')
+			self.fadeIn()
+
 		when '301'
-			console.error 'Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!'
-				
+			self.text('Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!')
+			self.addClass('register__modal_bad')
+			self.fadeIn()
+
 		when '302'
-			console.error 'Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.'
-				
+			self.text('Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.')
+			self.addClass('register__modal_bad')
+			self.fadeIn()
+
 		when '303'
-			console.error 'Пользователь с таким логином не найден!'
-				
+			self.text('Пользователь с таким логином не найден!')
+			self.addClass('register__modal_bad')
+			self.fadeIn()
+
 		when '304'
-			console.error 'Пароль введён не верно!'
+			self.text('Пароль введён не верно!')
+			self.addClass('register__modal_bad')
+			self.fadeIn()
 				
 	
 $(document).scroll ->

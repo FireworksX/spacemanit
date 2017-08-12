@@ -786,7 +786,31 @@ body {
 	}
 }
 
+.register__modal {
+	padding: 15px;
+	position: relative;
+	top: 430px;
+	max-width: 700px;
+    background: rgba(250, 255, 240, 1);
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: 1px solid #000000;
+	font-family: $font;
+	font-size: 18px;
+	line-height: 30px;
+	display: none;
+	text-align: center;
+	color: #222222;
+    margin: 0 auto;
+}
 
+.register__modal_good {
+	background: rgba(250, 255, 240, 1);
+	border: 1px solid rgb(13, 110, 27);
+}
 
-
-
+.register__modal_bad {
+	background: rgba(250, 255, 240, 1);
+	border: 1px solid rgb(110, 46, 46);
+}

@@ -12,19 +12,22 @@
     },
     methods: {
       registerF: function() {
-        return this.$http.post("includes/register.php?register=", this.dataAuth).then(function(res) {
-          console.log(res.data);
+        return this.$http.post("pages/main/includes/register.php?register=", this.dataAuth).then(function(res) {
+          console.log(res);
           modalWindow(res.data);
           return function(error) {
+            console.log(error);
             return modalWindow('300');
           };
         });
       },
       loginF: function() {
-        return this.$http.post("includes/login.php?login=", this.dataAuth).then(function(res) {
+        return this.$http.post("pages/main/includes/login.php?login=", this.dataAuth).then(function(res) {
+          console.log(res);
           return modalWindow(res.data);
         }, function(error) {
-          return modalRegister('302');
+          console.log(error);
+          return modalWindow('302');
         });
       }
     }
@@ -34,11 +37,11 @@
 
   $('.register__have').on('click', function() {
     if (type === 'reg') {
-      $('.body-login').fadeOut();
+      $('.body-mail').fadeOut();
       $(this).text('Я хочу зарегистрироваться');
       return type = 'log';
     } else {
-      $('.body-login').fadeIn();
+      $('.body-mail').fadeIn();
       $(this).text('У меня уже есть аккаунт');
       return type = 'reg';
     }
@@ -55,22 +58,42 @@
   });
 
   modalWindow = function(value) {
+    var self;
+    self = $('.register__modal');
+    console.log(value);
+    setTimeout(function() {
+      return self.fadeOut();
+    }, 3000);
     switch (value) {
       case '200':
-        return console.info("Пользователь: " + vm.$data.dataAuth.login + " успешно зарегистрирован!");
+        self.text("Пользователь: " + vm.dataAuth.login + " успешно зарегистрирован!");
+        self.addClass('register__modal_good');
+        return self.fadeIn();
       case '201':
-        console.info("Пользователь: " + vm.$data.dataAuth.login + " успешно авторизирован!");
-        return window.location = '/pages/app';
+        self.text("Пользователь: " + vm.dataAuth.login + " успешно авторизирован!");
+        self.addClass('register__modal_good');
+        window.location = '/pages/app';
+        return self.fadeIn();
       case '300':
-        return console.error('Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.');
+        self.text('Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.');
+        self.addClass('register__modal_bad');
+        return self.fadeIn();
       case '301':
-        return console.error('Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!');
+        self.text('Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!');
+        self.addClass('register__modal_bad');
+        return self.fadeIn();
       case '302':
-        return console.error('Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.');
+        self.text('Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.');
+        self.addClass('register__modal_bad');
+        return self.fadeIn();
       case '303':
-        return console.error('Пользователь с таким логином не найден!');
+        self.text('Пользователь с таким логином не найден!');
+        self.addClass('register__modal_bad');
+        return self.fadeIn();
       case '304':
-        return console.error('Пароль введён не верно!');
+        self.text('Пароль введён не верно!');
+        self.addClass('register__modal_bad');
+        return self.fadeIn();
     }
   };
 

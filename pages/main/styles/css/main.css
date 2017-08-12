@@ -697,3 +697,29 @@ body {
   margin-top: 3px; }
   .register__lock i {
     margin-right: 7px; }
+
+.register__modal {
+  padding: 15px;
+  position: relative;
+  top: 430px;
+  max-width: 700px;
+  background: #fafff0;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  border: 1px solid #000000;
+  font-family: "PF Agora Sans Pro";
+  font-size: 18px;
+  line-height: 30px;
+  display: none;
+  text-align: center;
+  color: #222222;
+  margin: 0 auto; }
+
+.register__modal_good {
+  background: #fafff0;
+  border: 1px solid #0d6e1b; }
+
+.register__modal_bad {
+  background: #fafff0;
+  border: 1px solid #6e2e2e; }

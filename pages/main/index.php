@@ -3,52 +3,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Spaceman IT - запрграммируй свой мозг</title>
-	<link rel="stylesheet" href="styles/css/libs.min.css">
-	<link rel="stylesheet" href="styles/css/reset.css">
-	<link rel="stylesheet" href="styles/css/main.css">
+	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/libs.min.css">
+	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/main.css">
 	<meta name="viewport" content="width=1170">
 </head>
 <body>
 <div id="app">
 	<div class="preloader">
-		<svg  width="64px" height="64px" viewBox="0 0 128 128" xml:space="preserve"><script type="text/ecmascript" xlink:href="//preloaders.net/jscripts/smil.user.js"/><g><circle cx="16" cy="64" r="16" fill="#ffffff" fill-opacity="1"/><circle cx="16" cy="64" r="14.344" fill="#ffffff" fill-opacity="1" transform="rotate(45 64 64)"/><circle cx="16" cy="64" r="12.531" fill="#ffffff" fill-opacity="1" transform="rotate(90 64 64)"/><circle cx="16" cy="64" r="10.75" fill="#ffffff" fill-opacity="1" transform="rotate(135 64 64)"/><circle cx="16" cy="64" r="10.063" fill="#ffffff" fill-opacity="1" transform="rotate(180 64 64)"/><circle cx="16" cy="64" r="8.063" fill="#ffffff" fill-opacity="1" transform="rotate(225 64 64)"/><circle cx="16" cy="64" r="6.438" fill="#ffffff" fill-opacity="1" transform="rotate(270 64 64)"/><circle cx="16" cy="64" r="5.375" fill="#ffffff" fill-opacity="1" transform="rotate(315 64 64)"/><animateTransform attributeName="transform" type="rotate" values="0 64 64;315 64 64;270 64 64;225 64 64;180 64 64;135 64 64;90 64 64;45 64 64" calcMode="discrete" dur="720ms" repeatCount="indefinite"></animateTransform></g></script></svg>
-		<div class="prloader__text">spacemanit.pro</div>
+		<svg  width="64px" height="64px" viewBox="0 0 128 128" xml:space="preserve"><script type="text/ecmascript" xlink:href="//preloaders.net/jscripts/smil.user.js"/><g><circle cx="16" cy="64" r="16" fill="#ffffff" fill-opacity="1"/><circle cx="16" cy="64" r="14.344" fill="#ffffff" fill-opacity="1" transform="rotate(45 64 64)"/><circle cx="16" cy="64" r="12.531" fill="#ffffff" fill-opacity="1" transform="rotate(90 64 64)"/><circle cx="16" cy="64" r="10.75" fill="#ffffff" fill-opacity="1" transform="rotate(135 64 64)"/><circle cx="16" cy="64" r="10.063" fill="#ffffff" fill-opacity="1" transform="rotate(180 64 64)"/><circle cx="16" cy="64" r="8.063" fill="#ffffff" fill-opacity="1" transform="rotate(225 64 64)"/><circle cx="16" cy="64" r="6.438" fill="#ffffff" fill-opacity="1" transform="rotate(270 64 64)"/><circle cx="16" cy="64" r="5.375" fill="#ffffff" fill-opacity="1" transform="rotate(315 64 64)"/><animateTransform attributeName="transform" type="rotate" values="0 64 64;315 64 64;270 64 64;225 64 64;180 64 64;135 64 64;90 64 64;45 64 64" calcMode="discrete" dur="720ms" repeatCount="indefinite"></animateTransform></g></script></svg><div class="prloader__text">spacemanit.pro</div>
 	</div>
-<!--
-	<form v-on:submit.prevent="loginF()" class="form-sign">
-		<div class="login">
-			<div class="login__text">Логин</div>
-			<input required v-model="login.login" type="text" class="login__input">
-		</div>
-		<div class="password">
-			<div class="password__text">Пароль</div>
-			<input required v-model="login.password" type="password" class="password__input">
-		</div>
-		<button class="form-sign__sign"><span>Вход</span></button>
-		<div class="form-sign__reg"><span>Зарегистрироваться</span></div>
-	</form>
-	
-	<form v-on:submit.prevent="registerF()" class="form-register">
-		<div class="login">
-			<div class="login__text">Логин</div>
-			<input required v-model="register.login" type="text" class="login__input">
-		</div>
-		<div class="password">
-			<div class="password__text">Пароль:</div>
-			<input required v-model="register.password" type="password" class="password__input">
-		</div>
-		<div class="email">
-			<div class="email__text">E-mail:</div>
-			<input required v-model="register.email" type="e-mail" class="email__input">
-		</div>
-		<button class="form-register__reg"><span>Зарегистрироваться</span></button>
-		<div class="form-register__sign">Вход</div>
-	</form>
-	<div class="modal-window">
-		<p class="modal-window__text"></p>
-	</div>
--->
-
 	<div class="header">
 		<div class="wrapper">
 			<div class="bar">
@@ -162,14 +126,15 @@
 		</div>
 	</div>
 	<div class="register">
+        <div class="register__modal">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem consequatur debitis explicabo facere fugit porro. Ab asperiores aspernatur culpa, eum expedita, ipsa minima, obcaecati porro repellendus repudiandae rerum suscipit!</div>
 		<div class="wrapper">
 			<div class="register__head">зарегистрируйся чобы получить <br> доступ ко всем занятиям и тестам</div>
 			<div class="register-form">
 				<div class="register-form__text">заполните форму и начните своё <br> обучение уже через <span>10 секунд</span></div>
 				<div class="register-body">
-					<div class="body-login"><i class="zmdi zmdi-account"></i><input v-model="dataAuth.login" placeholder="Имя" type="text" class="body-login__login"></div>
-					<div class="body-mail"><i class="zmdi zmdi-email"></i><input v-model="dataAuth.email" placeholder="E-mail" type="email" class="body-login__mail"></div>
-					<div class="body-pass"><i class="zmdi zmdi-key"></i><input v-model="dataAuth.pass" placeholder="Пароль" type="password" class="body-login__pass"></div>
+					<div class="body-login"><i class="zmdi zmdi-account"></i><input required v-model="dataAuth.login" placeholder="Имя" type="text" class="body-login__login"></div>
+					<div class="body-mail"><i class="zmdi zmdi-email"></i><input required v-model="dataAuth.email" placeholder="E-mail" type="email" class="body-login__mail"></div>
+					<div class="body-pass"><i class="zmdi zmdi-key"></i><input required v-model="dataAuth.pass" placeholder="Пароль" type="password" class="body-login__pass"></div>
 					<div class="body-start"><i class="zmdi zmdi-check"></i>Полетели</div>
 				</div>
 				<div class="register__have">У меня уже есть аккаунт</div>
@@ -180,7 +145,7 @@
 
 </div>
 	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
-	<script src="scripts/libs.min.js"></script>
-	<script src="scripts/common_main.js"></script>
+	<script src="pages/main/scripts/libs.min.js"></script>
+	<script src="pages/main/scripts/common_main.js"></script>
 </body>
 </html>
