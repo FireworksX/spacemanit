@@ -1,6 +1,5 @@
 <?php
 	require "db.php";
-	
 	$json = file_get_contents('php://input'); 
 	$data = json_decode($json, JSON_BIGINT_AS_STRING);
 	if( R::count('users', "login = ? OR email = ?", array($data['login'], $data['email'])) > 0 ){

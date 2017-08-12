@@ -22,10 +22,11 @@ vm = new Vue
 		login: {}
 	methods:
 		registerF: ->
-			@$http.post("includes/register.php?register=", @dataAuth).then((res) -> 
+			@$http.post("includes/register.php?register=", @dataAuth).then((res) ->
+				console.log res.data
 				modalWindow(res.data)
-			(error) -> 
-				modalWindow('300'))
+				(error) ->
+					modalWindow('300'))
 		loginF: ->
 			@$http.post("includes/login.php?login=", @dataAuth).then((res) ->
 #				@id = res.data.split '|'

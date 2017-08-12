@@ -13,9 +13,11 @@
     methods: {
       registerF: function() {
         return this.$http.post("includes/register.php?register=", this.dataAuth).then(function(res) {
-          return modalWindow(res.data);
-        }, function(error) {
-          return modalWindow('300');
+          console.log(res.data);
+          modalWindow(res.data);
+          return function(error) {
+            return modalWindow('300');
+          };
         });
       },
       loginF: function() {

@@ -290,7 +290,7 @@ body {
   width: 80px;
   position: absolute;
   left: 50px;
-  top: -700px;
+  top: -800px;
   z-index: -1; }
 
 #comet2 {
@@ -300,7 +300,7 @@ body {
   width: 80px;
   position: absolute;
   left: 200px;
-  top: -700px;
+  top: -800px;
   z-index: -1; }
 
 #comet3 {
@@ -310,7 +310,7 @@ body {
   width: 80px;
   position: absolute;
   right: 100px;
-  top: -800px;
+  top: -900px;
   z-index: -1; }
 
 #comet4 {
@@ -320,7 +320,7 @@ body {
   width: 80px;
   position: absolute;
   right: 230px;
-  top: -700px;
+  top: -800px;
   z-index: -1; }
 
 .why__text {
