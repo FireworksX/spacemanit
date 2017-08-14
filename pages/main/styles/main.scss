@@ -1,5 +1,7 @@
+@import "fonts";
 $font: 'PF Agora Sans Pro';
 $font-hand: 'Bad Script';
+
 
 @mixin clearfix() {
   &::after {
@@ -37,161 +39,62 @@ body {
 	font-weight: 500;
 }
 
-.form-sign,
-.form-register{
-	width: 300px;
-	background: #f6f6ff;
-	text-align: center;
-	padding: 15px;
-	border: 1px solid #000;
-	display: inline-block;
-	border-radius: 10px;
-	position: absolute;
-	left: 50%;
-	margin-left: -150px;
-	top: 50%;
-	margin-top: -159px;
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: block;
+    text-align: center;
+    display: none;
 }
 
-.form-register {
-	display: none;
+.modal__body {
+    display: inline-block;
+    margin: 0 auto;
+    max-width: 500px;
+    max-height: 200px;
+    border: 1px solid #fff;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    color: #ffffff;
+    padding: 20px;
+    background: rgba(28, 28, 28, 0.7);
+    position: static;
+    margin-top: 100px;
+    line-height: 22px;
 }
 
-.login__text {
-	text-align: left;
-	font-size: 18px;
-	font-weight: 300;
+.modal_info {
+  background: rgba(31, 56, 93, 0.5);
+  .modal__body {
+    background: rgba(21, 24, 64, 0.7);
+  }
 }
 
-.login__input {
-	width: 100%;
-	padding: 7px;
-	outline: none;
-	border: 1px solid #dddddd;
-	border-radius: 7px;
-	font-size: 18px;
-	font-weight: 300;
+.modal_good {
+  background: rgba(31, 93, 59, 0.5);
+  .modal__body {
+    background: rgba(44, 115, 76, 0.7);
+  }
 }
 
-.password {
-	margin-top: 20px;
+.modal_warn {
+  background: rgba(63, 93, 31, 0.5);
+  .modal__body {
+    background: rgba(128, 130, 52, 0.7);
+  }
 }
 
-.password__text {
-	text-align: left;
-	font-size: 18px;
-	font-weight: 300;
+.modal_error {
+  background: rgba(86, 56, 56, 0.5);
+  .modal__body {
+    background: rgba(115, 44, 44, 0.7);
+  }
 }
-
-.password__input {
-	width: 100%;
-	padding: 7px;
-	outline: none;
-	border: 1px solid #ddd;
-	border-radius: 7px;
-	font-size: 18px;
-	font-weight: 300;
-}
-
-.email {
-	margin-top: 20px;
-}
-
-.email__text {
-	text-align: left;
-	font-size: 18px;
-	font-weight: 300;
-}
-
-.email__input {
-	width: 100%;
-	padding: 7px;
-	outline: none;
-	border: 1px solid #ddd;
-	border-radius: 7px;
-	font-size: 18px;
-	font-weight: 300;
-}
-
-.form-sign__sign {
-	display: inline-block;
-	padding: 10px 50px;
-	margin-top: 20px;
-	background: #dcffbd;
-	border-radius: 7px;
-	border: 1px solid #ddd;
-	font-size: 18px;
-	font-weight: 300;
-	cursor: pointer;
-	outline: none;
-	&:hover {
-		background: #c4ff90;
-	}
-}
-
-.form-register__reg {
-	display: inline-block;
-	padding: 10px 30px;
-	margin-top: 20px;
-	background: #dcffbd;
-	border-radius: 7px;
-	border: 1px solid #ddd;
-	font-size: 18px;
-	font-weight: 300;
-	cursor: pointer;
-	outline: none;
-	&:hover {
-		background: #c4ff90;
-	}
-}
-
-.form-register__sign {
-	display: inline-block;
-	padding: 10px 30px;
-	margin-top: 20px;
-	background: #f6f6f6;
-	border-radius: 7px;
-	border: 1px solid #ddd;
-	font-size: 18px;
-	font-weight: 300;
-	cursor: pointer;
-	&:hover {
-		background: #ddd;
-	}
-}
-
-.form-sign__reg {
-	display: inline-block;
-	padding: 10px 30px;
-	margin-top: 20px;
-	background: #f6f6f6;
-	border-radius: 7px;
-	border: 1px solid #ddd;
-	font-size: 18px;
-	font-weight: 300;
-	cursor: pointer;
-	&:hover {
-		background: #ddd;
-	}
-}
-
-.modal-window {
-	width: 400px;
-	background: rgba(246, 246, 246, 0.95);
-	border-radius: 10px;
-	padding: 30px;
-	text-align: center;
-	position: absolute;
-	left: 50%;
-	margin-left: -200px;
-	display: none;
-}
-
-.modal-window__text {
-	font-size: 20px;
-	font-weight: 400;
-}
-
 
 /* Start site */
 
@@ -784,33 +687,4 @@ body {
 	i {
 		margin-right: 7px;
 	}
-}
-
-.register__modal {
-	padding: 15px;
-	position: relative;
-	top: 430px;
-	max-width: 700px;
-    background: rgba(250, 255, 240, 1);
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	border: 1px solid #000000;
-	font-family: $font;
-	font-size: 18px;
-	line-height: 30px;
-	display: none;
-	text-align: center;
-	color: #222222;
-    margin: 0 auto;
-}
-
-.register__modal_good {
-	background: rgba(250, 255, 240, 1);
-	border: 1px solid rgb(13, 110, 27);
-}
-
-.register__modal_bad {
-	background: rgba(250, 255, 240, 1);
-	border: 1px solid rgb(110, 46, 46);
 }

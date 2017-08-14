@@ -1,0 +1,17 @@
+@import "http://fonts.fontstorage.com/import/badscript.css";
+/*
+	Bad Script, 400
+*/
+@font-face {
+  font-family:'PFAgoraSansPro-Black';
+  src: url('../fonts/AgoraSansProBlack/PFAgoraSansPro-Black.eot');
+  src: url('../fonts/AgoraSansProBlack/PFAgoraSansPro-Black.eot?#iefix') format('embedded-opentype'),
+  url('../fonts/AgoraSansProBlack/PFAgoraSansPro-Black.woff2') format('woff2'),
+  url('../fonts/AgoraSansProBlack/PFAgoraSansPro-Black.woff') format('woff'),
+  url('../fonts/AgoraSansProBlack/PFAgoraSansPro-Black.ttf') format('truetype'),
+  url('../fonts/AgoraSansProBlack/PFAgoraSansPro-Black.svg#PFAgoraSansPro-Black') format('svg');
+  font-weight: 900;
+  font-style: normal;
+  font-stretch: normal;
+  unicode-range: U+0020-FB05;
+}

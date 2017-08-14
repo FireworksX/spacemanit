@@ -1,4 +1,40 @@
 #####################
+#	Functions
+#####################
+
+setBlur = (element, radius) ->
+	radius = "blur(#{radius}px)"
+	$(element).css
+		'filter': radius,
+		'webkitFilter': radius,
+		'mozFilter': radius,
+		'oFilter': radius,
+		'msFilter': radius,
+		'transition':'all 0.5s ease-out',
+		'-webkit-transition':'all 0.5s ease-out',
+		'-moz-transition':'all 0.5s ease-out',
+		'-o-transition':'all 0.5s ease-out'
+
+showModal = (type, text, context, callback) ->
+  if arguments.length >= 1
+    if arguments[0] is undefined then type = 'info'
+    if text is '' then text = 'Modal window'
+    if context is null or undefined or '' then context = null
+    if typeof callback isnt 'function' then callback = ->
+    $('.modal').addClass("modal_#{type}")
+    $('.modal__body').text(text)
+    $('.modal').fadeIn(200, -> setBlur('#app', 20))
+    setTimeout( ->
+      $('.modal').fadeOut(200, ->
+        $('.modal').removeClass("modal_#{type}")
+        setBlur('#app', 0)
+        callback())
+    ,3000
+    )
+  else
+    console.error 'Недостаточно аргументов'
+
+#####################
 #	Snap
 #####################
 	
@@ -30,10 +66,8 @@ vm = new Vue
 					modalWindow('300'))
 		loginF: ->
 			@$http.post("pages/main/includes/login.php?login=", @dataAuth).then((res) ->
-#				@id = res.data.split '|'
-#				console.log @id
-				console.log res
-				modalWindow(res.data);										  
+				modalWindow(res.data);
+				console.log @.dataAuth
 			(error) ->
 				console.log error
 				modalWindow('302'))
@@ -59,47 +93,27 @@ $('.body-start').on 'click', ->
 		type = 'log'
 	
 modalWindow = (value) ->
-	self = $('.register__modal')
-	console.log value
-	setTimeout( ->
-		self.fadeOut()
-	, 3000 )
 	switch value
 		when '200'
-			self.text("Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!")
-			self.addClass('register__modal_good')
-			self.fadeIn()
+			showModal('good',"Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!", null)
 
 		when '201'
-			self.text("Пользователь: #{vm.dataAuth.login} успешно авторизирован!")
-			self.addClass('register__modal_good')
-			window.location = '/pages/app'
-			self.fadeIn()
+      showModal('good',"Пользователь: #{vm.dataAuth.login} успешно авторизирован!", null, -> window.location = 'pages/app')
 
 		when '300'
-			self.text('Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.')
-			self.addClass('register__modal_bad')
-			self.fadeIn()
+			showModal('error','Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.')
 
 		when '301'
-			self.text('Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!')
-			self.addClass('register__modal_bad')
-			self.fadeIn()
+			showModal('error','Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!')
 
 		when '302'
-			self.text('Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.')
-			self.addClass('register__modal_bad')
-			self.fadeIn()
+      showModal('error','Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.')
 
 		when '303'
-			self.text('Пользователь с таким логином не найден!')
-			self.addClass('register__modal_bad')
-			self.fadeIn()
+			showModal('error','Пользователь с таким логином не найден!')
 
 		when '304'
-			self.text('Пароль введён не верно!')
-			self.addClass('register__modal_bad')
-			self.fadeIn()
+      showModal('error','Пароль введён не верно!')
 				
 	
 $(document).scroll ->
@@ -118,7 +132,7 @@ $(document).ready ->
 		$('body').css
 			'overflow': 'auto')
 	
-	
+
 
 	
 		

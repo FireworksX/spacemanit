@@ -7,8 +7,13 @@
 	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/main.css">
 	<meta name="viewport" content="width=1170">
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
+<div class="modal">
+    <div class="modal__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci corporis cum cupiditate earum et explicabo itaque iusto labore magni maxime necessitatibus numquam optio, qui quo quos voluptatibus? Aspernatur, unde!</div>
+</div>
 <div id="app">
 	<div class="preloader">
 		<svg  width="64px" height="64px" viewBox="0 0 128 128" xml:space="preserve"><script type="text/ecmascript" xlink:href="//preloaders.net/jscripts/smil.user.js"/><g><circle cx="16" cy="64" r="16" fill="#ffffff" fill-opacity="1"/><circle cx="16" cy="64" r="14.344" fill="#ffffff" fill-opacity="1" transform="rotate(45 64 64)"/><circle cx="16" cy="64" r="12.531" fill="#ffffff" fill-opacity="1" transform="rotate(90 64 64)"/><circle cx="16" cy="64" r="10.75" fill="#ffffff" fill-opacity="1" transform="rotate(135 64 64)"/><circle cx="16" cy="64" r="10.063" fill="#ffffff" fill-opacity="1" transform="rotate(180 64 64)"/><circle cx="16" cy="64" r="8.063" fill="#ffffff" fill-opacity="1" transform="rotate(225 64 64)"/><circle cx="16" cy="64" r="6.438" fill="#ffffff" fill-opacity="1" transform="rotate(270 64 64)"/><circle cx="16" cy="64" r="5.375" fill="#ffffff" fill-opacity="1" transform="rotate(315 64 64)"/><animateTransform attributeName="transform" type="rotate" values="0 64 64;315 64 64;270 64 64;225 64 64;180 64 64;135 64 64;90 64 64;45 64 64" calcMode="discrete" dur="720ms" repeatCount="indefinite"></animateTransform></g></script></svg><div class="prloader__text">spacemanit.pro</div>
@@ -126,8 +131,7 @@
 		</div>
 	</div>
 	<div class="register">
-        <div class="register__modal">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque autem consequatur debitis explicabo facere fugit porro. Ab asperiores aspernatur culpa, eum expedita, ipsa minima, obcaecati porro repellendus repudiandae rerum suscipit!</div>
-		<div class="wrapper">
+        <div class="wrapper">
 			<div class="register__head">зарегистрируйся чобы получить <br> доступ ко всем занятиям и тестам</div>
 			<div class="register-form">
 				<div class="register-form__text">заполните форму и начните своё <br> обучение уже через <span>10 секунд</span></div>
@@ -142,7 +146,6 @@
 			</div>
 		</div>
 	</div>
-
 </div>
 	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
 	<script src="pages/main/scripts/libs.min.js"></script>
