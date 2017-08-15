@@ -1,5 +1,5 @@
 (function() {
-  var modalWindow, setBlur, showModal, type, vm;
+  var modalWindow, setBlur, showModal, type, validateData, vm;
 
   setBlur = function(element, radius) {
     radius = "blur(" + radius + "px)";
@@ -47,6 +47,18 @@
     }
   };
 
+  validateData = function(type, body) {
+    if (type === 'phone') {
+      return /^\+\d{2}\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(body);
+    }
+    if (type === 'email') {
+      return /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(body);
+    }
+    if (type === 'login') {
+      return /^[a-zA-Z0-9]+$/.test(body);
+    }
+  };
+
   Vue.use(VueResource);
 
   vm = new Vue({
@@ -59,7 +71,6 @@
     methods: {
       registerF: function() {
         return this.$http.post("pages/main/includes/register.php?register=", this.dataAuth).then(function(res) {
-          console.log(res);
           modalWindow(res.data);
           return function(error) {
             console.log(error);
@@ -95,11 +106,19 @@
 
   $('.body-start').on('click', function() {
     if (type === 'reg') {
-      vm.registerF();
-      return type = 'reg';
+      if (validateData('email', vm.dataAuth.email) === true && validateData('login', vm.dataAuth.login) === true && typeof vm.dataAuth.pass !== 'undefined' && vm.dataAuth.pass !== '') {
+        vm.registerF();
+        return type = 'reg';
+      } else {
+        alert('Ошибка введёных данных.');
+      }
     } else {
-      vm.loginF();
-      return type = 'log';
+      if (validateData('login', vm.dataAuth.login) === true && typeof vm.dataAuth.pass !== 'undefined' && vm.dataAuth.pass !== '') {
+        vm.loginF();
+        return type = 'log';
+      } else {
+        alert('Ошибка введёных данных');
+      }
     }
   });
 

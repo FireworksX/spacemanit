@@ -34,6 +34,11 @@ showModal = (type, text, context, callback) ->
   else
     console.error 'Недостаточно аргументов'
 
+validateData = (type, body) ->
+	if type is 'phone' then return /^\+\d{2}\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(body)
+	if type is 'email' then return /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(body)
+	if type is 'login' then return /^[a-zA-Z0-9]+$/.test(body)
+
 #####################
 #	Snap
 #####################
@@ -59,7 +64,6 @@ vm = new Vue
 	methods:
 		registerF: ->
 			@$http.post("pages/main/includes/register.php?register=", @dataAuth).then((res) ->
-				console.log res
 				modalWindow(res.data)
 				(error) ->
 					console.log error
@@ -84,13 +88,22 @@ $('.register__have').on 'click', ->
 		$(@).text('У меня уже есть аккаунт')
 		type = 'reg'
 
+
 $('.body-start').on 'click', ->
-	if type is 'reg'
-		vm.registerF() 
-		type = 'reg'
-	else 
-		vm.loginF()
-		type = 'log'
+    if type is 'reg'
+      if validateData('email', vm.dataAuth.email) is true and validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
+        vm.registerF()
+        type = 'reg'
+      else
+        alert 'Ошибка введёных данных.'
+        return
+    else
+      if validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
+        vm.loginF()
+        type = 'log'
+      else
+        alert 'Ошибка введёных данных'
+        return
 	
 modalWindow = (value) ->
 	switch value
