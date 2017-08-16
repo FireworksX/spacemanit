@@ -622,3 +622,63 @@ body {
   margin-top: 3px; }
   .register__lock i {
     margin-right: 7px; }
+
+.activate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  display: none; }
+
+.activate__body {
+  width: 300px;
+  background: #f6f6f6;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #bcbcbc;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  margin-top: 100px; }
+
+.activate__head {
+  font-weight: 600;
+  font-size: 21px;
+  color: #222222;
+  margin-bottom: 30px; }
+
+.activate__text {
+  font-size: 18px;
+  margin-bottom: 20px;
+  font-style: italic; }
+
+.activate__input {
+  width: 100%;
+  padding: 7px;
+  font-size: 18px;
+  border: 1px solid #c7c7c7;
+  border-radius: 5px;
+  background: #fff;
+  outline: none;
+  text-align: center;
+  text-transform: uppercase; }
+
+.activate__button {
+  width: 100%;
+  padding: 15px;
+  background: #f6f6f6;
+  border: 1px solid #c7c7c7;
+  border-radius: 5px;
+  margin-top: 20px;
+  cursor: pointer;
+  -webkit-transition: .5s;
+  -moz-transition: .5s;
+  -ms-transition: .5s;
+  -o-transition: .5s;
+  transition: .5s; }
+  .activate__button:hover {
+    background: #c7c7c7; }

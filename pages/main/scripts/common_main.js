@@ -1,5 +1,5 @@
 (function() {
-  var modalWindow, setBlur, showModal, symbolForCode, type, validateData, vm;
+  var modalWindow, setBlur, showActivate, showModal, symbolForCode, type, validateData, vm;
 
   setBlur = function(element, radius) {
     radius = "blur(" + radius + "px)";
@@ -47,6 +47,16 @@
     }
   };
 
+  showActivate = function(flag) {
+    if (flag === 1) {
+      setBlur('#app', 20);
+      return $('.activate').fadeIn();
+    } else {
+      setBlur('#app', 0);
+      return $('.activate').fadeOut();
+    }
+  };
+
   validateData = function(type, body) {
     if (type === 'phone') {
       return /^\+\d{2}\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(body);
@@ -60,6 +70,9 @@
     if (type === 'pass') {
       return /^[a-zA-Z0-9]+$/.test(body);
     }
+    if (type === 'code') {
+      return /^[A-Z0-9]+$/.test(body);
+    }
   };
 
   Vue.use(VueResource);
@@ -72,8 +85,6 @@
       dataAuth: {},
       activate: {
         action: 1,
-        title: 'Подтвердите свою почту',
-        body: "Вы оставили заявку на регистрацию на сайте <b>spacemanit.pro</b>. Для подтверждения вашего адреса используйте код: ",
         code: '',
         link: ''
       }
@@ -98,6 +109,7 @@
       },
       registerF: function() {
         return this.$http.post("pages/main/includes/register.php?register=", this.dataAuth).then(function(res) {
+          console.log(res);
           modalWindow(res.data);
           return function(error) {
             console.log(error);
@@ -135,7 +147,6 @@
   $('.body-start').on('click', function() {
     if (type === 'reg') {
       if (validateData('email', vm.dataAuth.email) === true && validateData('login', vm.dataAuth.login) === true && typeof vm.dataAuth.pass !== 'undefined' && vm.dataAuth.pass !== '') {
-        console.log(vm);
         vm.registerF();
         return type = 'reg';
       } else {
@@ -151,6 +162,18 @@
     }
   });
 
+  $('.activate__button').on('click', function() {
+    if (validateData('code', $('.activate__input').val()) !== true) {
+      return;
+    }
+    if ($('.activate__input').val() === vm.activate.code) {
+      vm.activate.action = 2;
+      return vm.mailActivation();
+    } else {
+      return $('.activate__head').text('Не верный код');
+    }
+  });
+
   modalWindow = function(value) {
     switch (value) {
       case '200':
@@ -162,7 +185,13 @@
           return window.location = 'pages/app';
         });
       case '203':
-        return showModal('good', "Письмо успрешно отправленно по адресу: " + vm.dataAuth.email);
+        return showModal('good', "Письмо успрешно отправленно по адресу: " + vm.dataAuth.email, null, function() {
+          return showActivate(1);
+        });
+      case '204':
+        return showModal('good', "Почта успешно подтверждена! Удачи в обучении.", null, function() {
+          return showActivate(2);
+        });
       case '300':
         return showModal('error', 'Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.');
       case '301':
@@ -173,6 +202,8 @@
         return showModal('error', 'Пользователь с таким логином не найден!');
       case '304':
         return showModal('error', 'Пароль введён не верно!');
+      case '305':
+        return showModal('error', 'Произошла ошибка при отправке письма');
     }
   };
 

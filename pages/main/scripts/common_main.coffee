@@ -34,11 +34,20 @@ showModal = (type, text, context, callback) ->
   else
     console.error 'Недостаточно аргументов'
 
+showActivate = (flag) ->
+  if flag is 1
+    setBlur('#app', 20)
+    $('.activate').fadeIn()
+  else
+    setBlur('#app', 0)
+    $('.activate').fadeOut()
+
 validateData = (type, body) ->
 	if type is 'phone' then return /^\+\d{2}\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(body)
 	if type is 'email' then return /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(body)
 	if type is 'login' then return /^[a-zA-Z0-9]+$/.test(body)
 	if type is 'pass' then return /^[a-zA-Z0-9]+$/.test(body)
+	if type is 'code' then return /^[A-Z0-9]+$/.test(body)
 
 #####################
 #	Snap
@@ -60,7 +69,12 @@ Vue.use VueResource
 ## Actions with mail
 ## 1 - Send mail with activate code (example: "N7QI1")
 ## code live in Vue scope in var code
+##
+## 2 - Send mail with text that account activate
+## and set in DataBase "activate = true"
 #############################################
+
+
 symbolForCode = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
 vm = new Vue
 	el: "#app"
@@ -68,8 +82,6 @@ vm = new Vue
 		dataAuth: {}
 		activate: {
       action: 1
-      title: 'Подтвердите свою почту'
-      body: "Вы оставили заявку на регистрацию на сайте <b>spacemanit.pro</b>. Для подтверждения вашего адреса используйте код: "
       code: ''
       link: ''
     }
@@ -88,6 +100,7 @@ vm = new Vue
           modalWindow('300'))
     registerF: ->
       @$http.post("pages/main/includes/register.php?register=", @dataAuth).then((res) ->
+        console.log res
         modalWindow(res.data)
         (error) ->
           console.log error
@@ -120,7 +133,6 @@ $('.register__have').on 'click', ->
 $('.body-start').on 'click', ->
   if type is 'reg'
     if validateData('email', vm.dataAuth.email) is true and validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
-      console.log vm
       vm.registerF()
       type = 'reg'
     else
@@ -133,7 +145,16 @@ $('.body-start').on 'click', ->
     else
       alert 'Ошибка введёных данных'
       return
-	
+
+
+$('.activate__button').on 'click', ->
+  if validateData('code', $('.activate__input').val()) isnt true then return
+  if $('.activate__input').val() is vm.activate.code
+    vm.activate.action = 2
+    vm.mailActivation()
+  else
+    $('.activate__head').text('Не верный код')
+
 modalWindow = (value) ->
 	switch value
 		when '200'
@@ -143,7 +164,10 @@ modalWindow = (value) ->
       showModal('good',"Пользователь: #{vm.dataAuth.login} успешно авторизирован!", null, -> window.location = 'pages/app')
 
 		when '203'
-      showModal('good',"Письмо успрешно отправленно по адресу: #{vm.dataAuth.email}")
+      showModal('good',"Письмо успрешно отправленно по адресу: #{vm.dataAuth.email}", null, -> showActivate(1))
+
+		when '204'
+      showModal('good',"Почта успешно подтверждена! Удачи в обучении.", null, -> showActivate(2))
 
 		when '300'
 			showModal('error','Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.')
@@ -159,6 +183,9 @@ modalWindow = (value) ->
 
 		when '304'
       showModal('error','Пароль введён не верно!')
+
+		when '305'
+      showModal('error','Произошла ошибка при отправке письма')
 				
 	
 $(document).scroll ->

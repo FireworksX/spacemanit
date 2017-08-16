@@ -147,6 +147,14 @@
 		</div>
 	</div>
 </div>
+<div class="activate">
+    <div class="activate__body">
+        <div class="activate__head">Подтвердите свою почту</div>
+        <div class="activate__text">На ваш почтовый адрес отправлено письмо с кодом для подтверждения.</div>
+        <input placeholder="Пример: N5TK9" type="text" class="activate__input">
+        <div class="activate__button">Активировать</div>
+    </div>
+</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
 	<script src="pages/main/scripts/libs.min.js"></script>
