@@ -3,9 +3,9 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-	<link rel="stylesheet" href="styles/css/libs.min.css">
-	<link rel="stylesheet" href="styles/css/reset.css">
-	<link rel="stylesheet" href="styles/css/main.css">
+	<link rel="stylesheet" href="pages/app/styles/css/libs.min.css">
+	<link rel="stylesheet" href="pages/app/styles/css/reset.css">
+	<link rel="stylesheet" href="pages/app/styles/css/main.css">
 </head>
 <body>
 <?php  require "includes/getNodes.php"; ?>
@@ -88,7 +88,7 @@
 </div>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
-	<script src="scripts/libs.min.js"></script>
-	<script src="scripts/common_app.js"></script>
+	<script src="pages/app/scripts/libs.min.js"></script>
+	<script src="pages/app/scripts/common_app.js"></script>
 </body>
 </html>

@@ -1,6 +1,9 @@
 <?php
 session_start();
-var_dump($_SESSION);
 if( $_SERVER['REQUEST_URI'] == '/'){
-    include 'page/main/index.php';
+    if($_SESSION['id'] != ''){
+        require 'pages/app/index.php';
+    }else{
+        require 'pages/main/index.php';
+    }
 }
