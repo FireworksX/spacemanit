@@ -52,12 +52,12 @@ if(!$mail->Send())
         $user = R::findOne('users', 'email = ?', array($data['link']));
         if($user){
             $user->active = 1;
+            R::store($user);
             echo '204';
         }
     }else {
         echo "203";
     }
 }
-$user = R::findOne('users', 'email = ?', array('abeltinsh.a@icloud.com'));
-var_dump($user);
+
 
