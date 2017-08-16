@@ -86,7 +86,7 @@
       activate: {
         action: 1,
         code: '',
-        link: ''
+        login: ''
       }
     },
     methods: {
@@ -97,7 +97,7 @@
           index = Math.floor(Math.random() * (symbolForCode.length - 1) + 1);
           this.activate.code += symbolForCode[index];
         }
-        this.activate.link = this.dataAuth.email;
+        this.activate.login = this.dataAuth.login;
         return this.$http.post("pages/main/includes/mail.php?activate=", this.activate).then(function(res) {
           console.log(res);
           modalWindow(res.data);
@@ -185,7 +185,7 @@
           return window.location = 'pages/app';
         });
       case '203':
-        return showModal('good', "Письмо успрешно отправленно по адресу: " + vm.dataAuth.email, null, function() {
+        return showModal('good', "Письмо успрешно отправленно пользователю: " + vm.dataAuth.login, null, function() {
           return showActivate(1);
         });
       case '204':
@@ -204,6 +204,10 @@
         return showModal('error', 'Пароль введён не верно!');
       case '305':
         return showModal('error', 'Произошла ошибка при отправке письма');
+      case '306':
+        return showModal('warn', 'Необходимо активировать ваш аккаунт', null, function() {
+          return vm.mailActivation();
+        });
     }
   };
 

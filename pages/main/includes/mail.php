@@ -6,6 +6,9 @@ session_start();
 $json = file_get_contents('php://input');
 $data = json_decode($json, JSON_BIGINT_AS_STRING);
 
+$user = R::findOne('users', 'login = ?', array($data['login']));
+$email = $user->email;
+
 if( $data['action'] == 1){
     $title = 'Подтвердите свою почту';
     $text = 'Вы оставили заявку на регистрацию на сайте <b>spacemanit.pro</b>. Для подтверждения вашего адреса используйте код';
@@ -32,24 +35,23 @@ $mail->SMTPAuth = true;
 $mail->Username = "admin@spacemanit.pro";
 $mail->Password = "9811472874Artyr";
 
-$mail->From = "from@example.com";
+$mail->From = "admin@spacemanit.pro";
 $mail->FromName = "Spacemanit.pro";
-$mail->AddAddress($data['link'], "Josh Adams");
+$mail->AddAddress($email, "Account");
 
 $mail->WordWrap = 50;
 $mail->IsHTML(true);
 $mail->CharSet = "utf-8";
 
-$mail->Subject = "Here is the subject";
+$mail->Subject = $title;
 $mail->Body    = $bodyMail;
-$mail->AltBody = "This is the body in plain text for non-HTML mail clients";
+$mail->AltBody = "Писмо с сайта spacemanit.pro";
 
 if(!$mail->Send())
 {
     echo '305';
 }else{
     if( $data['action'] == 2 ){
-        $user = R::findOne('users', 'email = ?', array($data['link']));
         if($user){
             $user->active = 1;
             R::store($user);

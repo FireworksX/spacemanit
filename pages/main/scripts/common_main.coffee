@@ -72,6 +72,7 @@ Vue.use VueResource
 ##
 ## 2 - Send mail with text that account activate
 ## and set in DataBase "activate = true"
+##
 #############################################
 
 
@@ -83,7 +84,7 @@ vm = new Vue
 		activate: {
       action: 1
       code: ''
-      link: ''
+      login: ''
     }
 	methods: {
     mailActivation: ->
@@ -91,7 +92,7 @@ vm = new Vue
       for i in [1..5]
         index = Math.floor(Math.random() * (symbolForCode.length - 1) + 1)
         @activate.code += symbolForCode[index]
-      @activate.link = @dataAuth.email
+      @activate.login = @dataAuth.login
       @$http.post("pages/main/includes/mail.php?activate=", @activate).then((res) ->
         console.log res
         modalWindow(res.data)
@@ -164,7 +165,7 @@ modalWindow = (value) ->
       showModal('good',"Пользователь: #{vm.dataAuth.login} успешно авторизирован!", null, -> window.location = 'pages/app')
 
 		when '203'
-      showModal('good',"Письмо успрешно отправленно по адресу: #{vm.dataAuth.email}", null, -> showActivate(1))
+      showModal('good',"Письмо успрешно отправленно пользователю: #{vm.dataAuth.login}", null, -> showActivate(1))
 
 		when '204'
       showModal('good',"Почта успешно подтверждена! Удачи в обучении.", null, -> showActivate(2))
@@ -186,6 +187,9 @@ modalWindow = (value) ->
 
 		when '305'
       showModal('error','Произошла ошибка при отправке письма')
+
+		when '306'
+      showModal('warn','Необходимо активировать ваш аккаунт', null, -> vm.mailActivation())
 				
 	
 $(document).scroll ->
