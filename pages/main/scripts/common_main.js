@@ -1,5 +1,5 @@
 (function() {
-  var modalWindow, setBlur, showModal, type, validateData, vm;
+  var modalWindow, setBlur, showModal, symbolForCode, type, validateData, vm;
 
   setBlur = function(element, radius) {
     radius = "blur(" + radius + "px)";
@@ -57,18 +57,45 @@
     if (type === 'login') {
       return /^[a-zA-Z0-9]+$/.test(body);
     }
+    if (type === 'pass') {
+      return /^[a-zA-Z0-9]+$/.test(body);
+    }
   };
 
   Vue.use(VueResource);
+
+  symbolForCode = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
   vm = new Vue({
     el: "#app",
     data: {
       dataAuth: {},
-      register: {},
-      login: {}
+      activate: {
+        action: 1,
+        title: 'Подтвердите свою почту',
+        body: "Вы оставили заявку на регистрацию на сайте <b>spacemanit.pro</b>. Для подтверждения вашего адреса используйте код: ",
+        code: '',
+        link: ''
+      }
     },
     methods: {
+      mailActivation: function() {
+        var i, index, j;
+        this.activate.code = '';
+        for (i = j = 1; j <= 5; i = ++j) {
+          index = Math.floor(Math.random() * (symbolForCode.length - 1) + 1);
+          this.activate.code += symbolForCode[index];
+        }
+        this.activate.link = this.dataAuth.email;
+        return this.$http.post("pages/main/includes/mail.php?activate=", this.activate).then(function(res) {
+          console.log(res);
+          modalWindow(res.data);
+          return function(error) {
+            console.log(error);
+            return modalWindow('300');
+          };
+        });
+      },
       registerF: function() {
         return this.$http.post("pages/main/includes/register.php?register=", this.dataAuth).then(function(res) {
           modalWindow(res.data);
@@ -81,10 +108,11 @@
       loginF: function() {
         return this.$http.post("pages/main/includes/login.php?login=", this.dataAuth).then(function(res) {
           modalWindow(res.data);
-          return console.log(this.dataAuth);
-        }, function(error) {
-          console.log(error);
-          return modalWindow('302');
+          console.log(this.dataAuth);
+          return function(error) {
+            console.log(error);
+            return modalWindow('302');
+          };
         });
       }
     }
@@ -107,6 +135,7 @@
   $('.body-start').on('click', function() {
     if (type === 'reg') {
       if (validateData('email', vm.dataAuth.email) === true && validateData('login', vm.dataAuth.login) === true && typeof vm.dataAuth.pass !== 'undefined' && vm.dataAuth.pass !== '') {
+        console.log(vm);
         vm.registerF();
         return type = 'reg';
       } else {
@@ -125,11 +154,15 @@
   modalWindow = function(value) {
     switch (value) {
       case '200':
-        return showModal('good', "Пользователь: " + vm.dataAuth.login + " успешно зарегистрирован!", null);
+        return showModal('good', "Пользователь: " + vm.dataAuth.login + " успешно зарегистрирован!", null, function() {
+          return vm.mailActivation();
+        });
       case '201':
         return showModal('good', "Пользователь: " + vm.dataAuth.login + " успешно авторизирован!", null, function() {
           return window.location = 'pages/app';
         });
+      case '203':
+        return showModal('good', "Письмо успрешно отправленно по адресу: " + vm.dataAuth.email);
       case '300':
         return showModal('error', 'Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.');
       case '301':

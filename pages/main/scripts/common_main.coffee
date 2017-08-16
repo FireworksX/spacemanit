@@ -38,6 +38,7 @@ validateData = (type, body) ->
 	if type is 'phone' then return /^\+\d{2}\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(body)
 	if type is 'email' then return /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(body)
 	if type is 'login' then return /^[a-zA-Z0-9]+$/.test(body)
+	if type is 'pass' then return /^[a-zA-Z0-9]+$/.test(body)
 
 #####################
 #	Snap
@@ -54,27 +55,54 @@ validateData = (type, body) ->
 
 
 Vue.use VueResource
-	
+
+#############################################
+## Actions with mail
+## 1 - Send mail with activate code (example: "N7QI1")
+## code live in Vue scope in var code
+#############################################
+symbolForCode = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
 vm = new Vue
 	el: "#app"
 	data:
 		dataAuth: {}
-		register: {}
-		login: {}
-	methods:
-		registerF: ->
-			@$http.post("pages/main/includes/register.php?register=", @dataAuth).then((res) ->
-				modalWindow(res.data)
-				(error) ->
-					console.log error
-					modalWindow('300'))
-		loginF: ->
-			@$http.post("pages/main/includes/login.php?login=", @dataAuth).then((res) ->
-				modalWindow(res.data);
-				console.log @.dataAuth
-			(error) ->
-				console.log error
-				modalWindow('302'))
+		activate: {
+      action: 1
+      title: 'Подтвердите свою почту'
+      body: "Вы оставили заявку на регистрацию на сайте <b>spacemanit.pro</b>. Для подтверждения вашего адреса используйте код: "
+      code: ''
+      link: ''
+    }
+	methods: {
+    mailActivation: ->
+      @activate.code = ''
+      for i in [1..5]
+        index = Math.floor(Math.random() * (symbolForCode.length - 1) + 1)
+        @activate.code += symbolForCode[index]
+      @activate.link = @dataAuth.email
+      @$http.post("pages/main/includes/mail.php?activate=", @activate).then((res) ->
+        console.log res
+        modalWindow(res.data)
+        (error) ->
+          console.log error
+          modalWindow('300'))
+    registerF: ->
+      @$http.post("pages/main/includes/register.php?register=", @dataAuth).then((res) ->
+        modalWindow(res.data)
+        (error) ->
+          console.log error
+          modalWindow('300'))
+    loginF: ->
+      @$http.post("pages/main/includes/login.php?login=", @dataAuth).then((res) ->
+        modalWindow(res.data);
+        console.log @.dataAuth
+        (error) ->
+          console.log error
+          modalWindow('302'))
+  }
+
+
+
 
 type = 'reg'
 
@@ -90,28 +118,32 @@ $('.register__have').on 'click', ->
 
 
 $('.body-start').on 'click', ->
-    if type is 'reg'
-      if validateData('email', vm.dataAuth.email) is true and validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
-        vm.registerF()
-        type = 'reg'
-      else
-        alert 'Ошибка введёных данных.'
-        return
+  if type is 'reg'
+    if validateData('email', vm.dataAuth.email) is true and validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
+      console.log vm
+      vm.registerF()
+      type = 'reg'
     else
-      if validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
-        vm.loginF()
-        type = 'log'
-      else
-        alert 'Ошибка введёных данных'
-        return
+      alert 'Ошибка введёных данных.'
+      return
+  else
+    if validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
+      vm.loginF()
+      type = 'log'
+    else
+      alert 'Ошибка введёных данных'
+      return
 	
 modalWindow = (value) ->
 	switch value
 		when '200'
-			showModal('good',"Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!", null)
+			showModal('good',"Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!", null, -> vm.mailActivation())
 
 		when '201'
       showModal('good',"Пользователь: #{vm.dataAuth.login} успешно авторизирован!", null, -> window.location = 'pages/app')
+
+		when '203'
+      showModal('good',"Письмо успрешно отправленно по адресу: #{vm.dataAuth.email}")
 
 		when '300'
 			showModal('error','Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.')

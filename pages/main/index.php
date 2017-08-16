@@ -147,6 +147,7 @@
 		</div>
 	</div>
 </div>
+
 	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
 	<script src="pages/main/scripts/libs.min.js"></script>
 	<script src="pages/main/scripts/common_main.js"></script>

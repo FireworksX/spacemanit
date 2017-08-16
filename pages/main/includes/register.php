@@ -10,6 +10,7 @@
 		$users->password = md5($data['pass']);
 		$users->email = $data['email'];
 		$users->nodes = '';
+		$users->active = false;
 		$users->join_date = date("Y-m-d H:i:s");
 		$users->money = base64_encode(0);
 		R::store($users);
