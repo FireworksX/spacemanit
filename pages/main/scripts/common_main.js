@@ -182,7 +182,7 @@
         });
       case '201':
         return showModal('good', "Пользователь: " + vm.dataAuth.login + " успешно авторизирован!", null, function() {
-          return window.location = 'pages/app';
+          return window.location.reload();
         });
       case '203':
         return showModal('good', "Письмо успрешно отправленно пользователю: " + vm.dataAuth.login, null, function() {

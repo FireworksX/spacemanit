@@ -1,9 +1,55 @@
 (function() {
-  var active, drawPath, modalWindow, nodes, paper, pathString, profileActive, renderNodes, startOperations, status, user, vm;
+  var active, drawPath, modalWindow, nodes, paper, pathString, profileActive, renderNodes, setBlur, showModal, startOperations, status, user, vm;
 
   nodes = null;
 
   user = null;
+
+  setBlur = function(element, radius) {
+    radius = "blur(" + radius + "px)";
+    return $(element).css({
+      'filter': radius,
+      'webkitFilter': radius,
+      'mozFilter': radius,
+      'oFilter': radius,
+      'msFilter': radius,
+      'transition': 'all 0.5s ease-out',
+      '-webkit-transition': 'all 0.5s ease-out',
+      '-moz-transition': 'all 0.5s ease-out',
+      '-o-transition': 'all 0.5s ease-out'
+    });
+  };
+
+  showModal = function(type, text, context, callback) {
+    if (arguments.length >= 1) {
+      if (arguments[0] === void 0) {
+        type = 'info';
+      }
+      if (text === '') {
+        text = 'Modal window';
+      }
+      if (context === null || void 0 || '') {
+        context = null;
+      }
+      if (typeof callback !== 'function') {
+        callback = function() {};
+      }
+      $('.modal').addClass("modal_" + type);
+      $('.modal__body').text(text);
+      $('.modal').fadeIn(200, function() {
+        return setBlur('#app', 20);
+      });
+      return setTimeout(function() {
+        return $('.modal').fadeOut(200, function() {
+          $('.modal').removeClass("modal_" + type);
+          setBlur('#app', 0);
+          return callback();
+        });
+      }, 3000);
+    } else {
+      return console.error('Недостаточно аргументов');
+    }
+  };
 
   pathString = "";
 
@@ -107,14 +153,14 @@
     },
     methods: {
       addNode: function() {
-        return this.$http.post("includes/addNode.php?node=", this.nodeData).then(function(res) {
+        return this.$http.post("pages/app/includes/addNode.php?node=", this.nodeData).then(function(res) {
           return modalWindow(res.data);
         }, function(error) {
           return modalWindow('300');
         });
       },
       getNodes: function() {
-        return this.$http.post("includes/getNodes.php").then(function(res) {
+        return this.$http.post("pages/app/includes/getNodes.php").then(function(res) {
           this.nodes = res.data;
           modalWindow('203');
           nodes = this.nodes;
@@ -124,8 +170,7 @@
         });
       },
       getUser: function() {
-        return this.$http.post("includes/getUser.php").then(function(res) {
-          console.log(res.data);
+        return this.$http.post("pages/app/includes/getUser.php").then(function(res) {
           if (res.data === '309') {
             return modalWindow('309');
           } else {
@@ -133,7 +178,7 @@
             this.user.login = res.data.login;
             this.user.email = res.data.email;
             this.user.join_date = res.data.join_date;
-            user = res.date;
+            console.log(vm.user);
             return modalWindow('204');
           }
         }, function(error) {
@@ -257,116 +302,28 @@
   modalWindow = function(value) {
     switch (value) {
       case '200':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text("Пользователь: " + vm.$data.register.login + " успешно зарегистрирован!");
-        $('.modal-window').css({
-          background: 'rgba(187, 255, 179, 0.95)'
-        });
-        break;
+        return showModal('good', "Пользователь: " + vm.$data.register.login + " успешно зарегистрирован!");
       case '201':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text("Пользователь: " + vm.$data.login.login + " успешно авторизирован!");
-        $('.modal-window').css({
-          background: 'rgba(187, 255, 179, 0.95)'
-        });
-        break;
+        return showModal('good', "Пользователь: " + vm.$data.login.login + " успешно авторизирован!");
       case '202':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text("Нода с именем: " + vm.$data.nodeData.name + " успешно добавлена.");
-        $('.modal-window').css({
-          background: 'rgba(187, 255, 179, 0.95)'
-        });
-        break;
+        return showModal('good', "Нода с именем: " + vm.$data.nodeData.name + " успешно добавлена.");
       case '203':
-        nodes = vm.nodes;
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text("Все ноды успешно загружены.");
-        $('.modal-window').css({
-          background: 'rgba(187, 255, 179, 0.95)'
-        });
-        break;
+        return showModal('good', "Все ноды успешно загружены.");
       case '204':
-        nodes = vm.nodes;
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text("Данные пользователя успешно получены.");
-        $('.modal-window').css({
-          background: 'rgba(187, 255, 179, 0.95)'
-        });
-        console.log(vm.user);
-        break;
+        return showModal('good', "Данные пользователя успешно получены.");
       case '300':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
-      case '301':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
-      case '302':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
-      case '303':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Пользователь с таким логином не найден!');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
-      case '304':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Пароль введён не верно!');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
+        return showModal('error', "Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.");
       case '305':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Нода с таким именем уже существует.');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
+        return showModal('warn', "Нода с таким именем уже существует.");
       case '306':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Урок указанный на ноду уже используется.');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
+        return showModal('warn', 'Урок указанный на ноду уже используется.');
       case '307':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Возникла ошибка при отправке запроса на добавление ноды! Проверьте соединение с интернетом или повторите попытку позже.');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
+        return showModal('warn', 'Возникла ошибка при отправке запроса на добавление ноды! Проверьте соединение с интернетом или повторите попытку позже.');
       case '308':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Возникла ошибка при отправке запроса на получения данных пользователя! Проверьте соединение с интернетом или повторите попытку позже.');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
-        break;
+        return showModal('error', 'Возникла ошибка при отправке запроса на получения данных пользователя! Проверьте соединение с интернетом или повторите попытку позже.');
       case '309':
-        $('.modal-window').fadeIn();
-        $('.modal-window__text').text('Сессия не найдена. Авторизируйтесь повторно.');
-        $('.modal-window').css({
-          background: 'rgba(255, 130, 130, 0.95)'
-        });
+        return showModal('info', 'Сессия не найдена. Авторизируйтесь повторно.');
     }
-    return setTimeout(function() {
-      return $('.modal-window').fadeOut();
-    }, 3000);
   };
 
 }).call(this);

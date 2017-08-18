@@ -8,6 +8,43 @@ user = null
 ###########################
 #	Functions
 ##########################
+
+#####################
+#	Functions
+#####################
+
+setBlur = (element, radius) ->
+  radius = "blur(#{radius}px)"
+  $(element).css
+    'filter': radius,
+    'webkitFilter': radius,
+    'mozFilter': radius,
+    'oFilter': radius,
+    'msFilter': radius,
+    'transition':'all 0.5s ease-out',
+    '-webkit-transition':'all 0.5s ease-out',
+    '-moz-transition':'all 0.5s ease-out',
+    '-o-transition':'all 0.5s ease-out'
+
+showModal = (type, text, context, callback) ->
+  if arguments.length >= 1
+    if arguments[0] is undefined then type = 'info'
+    if text is '' then text = 'Modal window'
+    if context is null or undefined or '' then context = null
+    if typeof callback isnt 'function' then callback = ->
+    $('.modal').addClass("modal_#{type}")
+    $('.modal__body').text(text)
+    $('.modal').fadeIn(200, -> setBlur('#app', 20))
+    setTimeout( ->
+      $('.modal').fadeOut(200, ->
+        $('.modal').removeClass("modal_#{type}")
+        setBlur('#app', 0)
+        callback())
+    ,3000
+    )
+  else
+    console.error 'Недостаточно аргументов'
+
 pathString = ""
 
 drawPath = (i) ->
@@ -154,21 +191,20 @@ vm = new Vue
 			avatar: 'avater.png'
 	methods:
 		addNode: ->
-			@$http.post("includes/addNode.php?node=", @nodeData).then((res) -> 
+			@$http.post("pages/app/includes/addNode.php?node=", @nodeData).then((res) ->
 				modalWindow(res.data);
-			(error) -> 
+			(error) ->
 				modalWindow('300'))
 		getNodes: ->
-			@$http.post("includes/getNodes.php").then((res) -> 
+			@$http.post("pages/app/includes/getNodes.php").then((res) ->
 				@nodes = res.data
 				modalWindow('203')
 				nodes = @nodes
 				startOperations()
-			(error) -> 
+			(error) ->
 				modalWindow('300'))
 		getUser: ->
-			@$http.post("includes/getUser.php").then((res) -> 
-				console.log res.data
+			@$http.post("pages/app/includes/getUser.php").then((res) ->
 				if res.data is '309'
 					modalWindow('309')
 				else
@@ -176,9 +212,9 @@ vm = new Vue
 					@user.login = res.data.login
 					@user.email = res.data.email
 					@user.join_date = res.data.join_date
-					user = res.date
+					console.log vm.user
 					modalWindow('204')
-			(error) -> 
+			(error) ->
 				modalWindow('308'))
 vm.getUser()
 vm.getNodes()
@@ -194,11 +230,11 @@ $('.left-slide').height($(window).height())
 active = 0
 $('.left-slide').hide()
 $('.bar-circle').on 'click', ->
-	if active == 0 
+	if active == 0
 		$('.left-slide').animate {left: "0px"}, 600
 		$('.left-slide').show()
 		active = 1
-	else 
+	else
 		$('.left-slide').animate {left: "-300px"}, 600, ->
 			$('.left-slide').hide()
 		active = 0
@@ -227,44 +263,44 @@ $('.profile__avatar').on 'click', ->
 			->
 				profileActive = 0
 
-status = null			
-				
+status = null
+
 $('.add-active__left').on 'click', ->
 	$(this).addClass 'add-active__select'
 	$('.add-active__right').removeClass 'add-active__select'
 	status = true
-	
+
 $('.add-active__right').on 'click', ->
 	$(this).addClass 'add-active__select'
 	$('.add-active__left').removeClass 'add-active__select'
 	status = false
 
 $('.add__button').on 'click', ->
-	
+
 	if $('.add-name__input').val() is ''
 		alert 'Введите имя'
 		return
-	
-	if status is null 
+
+	if status is null
 		alert 'Выберите активность'
 		return
-	else if status is false 
+	else if status is false
 			vm.nodeData.status = false
 		else
 			vm.nodeData.status = true
-	
+
 	if $('.add-parent__input').val() is ''
 		alert 'Вы не указали родителя'
 		return
-	
+
 	if $('.add-path__input').val() is ''
 		alert 'Вы не указали какой урок будет загружаться.'
 		return
-	
+
 	if $('.add-color__input').val() is ''
 		alert 'Вы не ввели цвет ноды. Будет установлен чёрный цвет (по умолчанию)'
 		vm.nodeData.color = '#000'
-	
+
 	if $('.add-size__input').val() is ''
 		alert 'Вы не ввели размер ноды. Будет установлен размер 20 (по умолчанию)'
 		vm.nodeData.size = 20
@@ -272,112 +308,49 @@ $('.add__button').on 'click', ->
 	if $('.add-dif__input').val() is ''
 		alert 'Вы не указали сложность. Будет установлен 1 (по умолчанию)'
 		vm.nodeData.dif = 1
-	
+
 	vm.addNode()
 
 $('.add__exit').on 'click', ->
 	$('.add').fadeOut()
-	
 
-	
+
+
 modalWindow = (value) ->
 	switch value
 				
 		when '200'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text("Пользователь: #{vm.$data.register.login} успешно зарегистрирован!");
-			$('.modal-window').css
-				background: 'rgba(187, 255, 179, 0.95)'
+			showModal('good', "Пользователь: #{vm.$data.register.login} успешно зарегистрирован!")
 				
 		when '201'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text("Пользователь: #{vm.$data.login.login} успешно авторизирован!");
-			$('.modal-window').css
-				background: 'rgba(187, 255, 179, 0.95)'
+      showModal('good', "Пользователь: #{vm.$data.login.login} успешно авторизирован!")
 			
 		when '202'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text("Нода с именем: #{vm.$data.nodeData.name} успешно добавлена.");
-			$('.modal-window').css
-				background: 'rgba(187, 255, 179, 0.95)'
-			
+      showModal('good', "Нода с именем: #{vm.$data.nodeData.name} успешно добавлена.")
+
 		when '203'
-			nodes = vm.nodes
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text("Все ноды успешно загружены.");
-			$('.modal-window').css
-				background: 'rgba(187, 255, 179, 0.95)'
+      showModal('good', "Все ноды успешно загружены.")
 			
 		when '204'
-			nodes = vm.nodes
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text("Данные пользователя успешно получены.");
-			$('.modal-window').css
-				background: 'rgba(187, 255, 179, 0.95)'
-			console.log vm.user
+      showModal('good', "Данные пользователя успешно получены.")
 				
 		when '300'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
-				
-		when '301'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
-				
-		when '302'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
-				
-		when '303'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Пользователь с таким логином не найден!');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
-				
-		when '304'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Пароль введён не верно!');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'	
+			showModal('error', "Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.")
 			
 		when '305'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Нода с таким именем уже существует.');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
+      showModal('warn', "Нода с таким именем уже существует.")
 				
 		when '306'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Урок указанный на ноду уже используется.');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
+      showModal('warn', 'Урок указанный на ноду уже используется.')
 				
 		when '307'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Возникла ошибка при отправке запроса на добавление ноды! Проверьте соединение с интернетом или повторите попытку позже.');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
+      showModal('warn', 'Возникла ошибка при отправке запроса на добавление ноды! Проверьте соединение с интернетом или повторите попытку позже.')
 				
 		when '308'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Возникла ошибка при отправке запроса на получения данных пользователя! Проверьте соединение с интернетом или повторите попытку позже.');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
+			showModal('error', 'Возникла ошибка при отправке запроса на получения данных пользователя! Проверьте соединение с интернетом или повторите попытку позже.')
 				
 		when '309'
-			$('.modal-window').fadeIn();
-			$('.modal-window__text').text('Сессия не найдена. Авторизируйтесь повторно.');
-			$('.modal-window').css
-				background: 'rgba(255, 130, 130, 0.95)'
-	
-	setTimeout( -> 
-			   $('.modal-window').fadeOut();
-		, 3000);
+      showModal('info', 'Сессия не найдена. Авторизируйтесь повторно.')
+
 
 

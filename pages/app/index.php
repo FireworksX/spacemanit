@@ -8,7 +8,9 @@
 	<link rel="stylesheet" href="pages/app/styles/css/main.css">
 </head>
 <body>
-<?php  require "includes/getNodes.php"; ?>
+<div class="modal">
+    <div class="modal__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci corporis cum cupiditate earum et explicabo itaque iusto labore magni maxime necessitatibus numquam optio, qui quo quos voluptatibus? Aspernatur, unde!</div>
+</div>
 <div id="app">
 	<div class="bar">
 		<div class="left-slide">
@@ -81,9 +83,6 @@
 			</div>
 		</div>
 		<div class="add__button">Добавить</div>
-	</div>
-	<div class="modal-window">
-		<p class="modal-window__text"></p>
 	</div>
 </div>
 

@@ -162,7 +162,7 @@ modalWindow = (value) ->
 			showModal('good',"Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!", null, -> vm.mailActivation())
 
 		when '201'
-      showModal('good',"Пользователь: #{vm.dataAuth.login} успешно авторизирован!", null, -> window.location = 'pages/app')
+      showModal('good',"Пользователь: #{vm.dataAuth.login} успешно авторизирован!", null, -> window.location.reload())
 
 		when '203'
       showModal('good',"Письмо успрешно отправленно пользователю: #{vm.dataAuth.login}", null, -> showActivate(1))
