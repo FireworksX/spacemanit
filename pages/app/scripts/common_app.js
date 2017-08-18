@@ -1,5 +1,5 @@
 (function() {
-  var active, drawPath, modalWindow, nodes, paper, pathString, profileActive, renderNodes, setBlur, showModal, startOperations, status, user, vm;
+  var active, bg, drawPath, filter, i, j, modalWindow, nodes, paper, pathString, profileActive, radiusBlur, renderNodes, setBlur, showModal, star, starAnimations, startOperations, status, user, vm;
 
   nodes = null;
 
@@ -73,9 +73,7 @@
   renderNodes = function(i) {
     var group, icon, iconName, node, text;
     node = paper.circle(nodes[i].x, nodes[i].y, nodes[i].size).attr({
-      fill: nodes[i].color,
-      stroke: '#fff',
-      strokeWidth: 2
+      fill: nodes[i].color
     }).data('id', nodes[i].id - 1).mouseover(function() {
       if (nodes[i].status === 1) {
         return this.stop().animate({
@@ -126,7 +124,64 @@
     return results;
   };
 
+  starAnimations = function(element, animation) {
+    var r, x, y;
+    x = element.node.attributes.cx.value;
+    y = element.node.attributes.cy.value;
+    r = element.node.attributes.r.value;
+    switch (animation) {
+      case 1:
+        return element.animate({
+          cx: Number(x) + 300,
+          cy: Number(y) + 200,
+          fill: '#f0f'
+        }, 20000, function() {
+          return starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1));
+        });
+      case 2:
+        return element.animate({
+          cx: Number(x) + 50,
+          cy: Number(y) - 100,
+          fill: '#becfff'
+        }, 22000, function() {
+          return starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1));
+        });
+      case 3:
+        return element.animate({
+          cx: Number(x) - 150,
+          cy: Number(y) + 130,
+          fill: '#efffa8'
+        }, 18000, function() {
+          return starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1));
+        });
+      case 4:
+        return element.animate({
+          cx: Number(x) - 350,
+          cy: Number(y) + 130,
+          fill: '#7dff6d'
+        }, 28000, function() {
+          return starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1));
+        });
+    }
+  };
+
   paper = Snap(1920, 1080);
+
+  bg = paper.rect(0, 0, 1920, 1080);
+
+  bg.attr({
+    fill: '#0f0f1e'
+  });
+
+  for (i = j = 0; j <= 20; i = ++j) {
+    radiusBlur = Math.floor(Math.random() * (10 - 3) + 3);
+    filter = paper.filter(Snap.filter.blur(radiusBlur, radiusBlur));
+    star = paper.circle(Math.floor(Math.random() * $(window).width()), Math.floor(Math.random() * $(window).height()), Math.floor(Math.random() * (10 - 3) + 3));
+    star.attr({
+      fill: '#FFF',
+      filter: filter
+    }, starAnimations(star, Math.floor(Math.random() * (4 - 1) + 1)));
+  }
 
   paper.dblclick(function(event) {
     $('.add').css({

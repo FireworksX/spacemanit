@@ -70,8 +70,6 @@ renderNodes = (i) ->
 	node = paper.circle nodes[i].x, nodes[i].y, nodes[i].size
 		.attr 
 			fill: nodes[i].color
-			stroke: '#fff'
-			strokeWidth: 2
 		.data 'id', nodes[i].id - 1
 		.mouseover ->
 			if nodes[i].status is 1
@@ -113,15 +111,53 @@ startOperations = ->
 	for i in [0..nodes.length - 1]
 		renderNodes(i)
 		
-		
-	
+starAnimations = (element, animation) ->
+  ##################################################################
+  ## Animations for stars
+  ## 1 - Change x(+300), y (+200), color (#f0f). Duration - 20000ms
+  ## 2 - Change x(+50), y (-100), color (#becfff). Duration - 22000ms
+  ## 3 - Change x(-150), y (+130), color (#efffa8). Duration - 18000ms
+  ## 4 - Change x(-350), y (-130), color (#7dff6d). Duration - 28000ms
+  ##
+  ##################################################################
+  x = element.node.attributes.cx.value
+  y = element.node.attributes.cy.value
+  r = element.node.attributes.r.value
+#  fill = element.node.attributes.fill.value
+  switch animation
+    when 1
+      element.animate({cx: Number(x) + 300, cy: Number(y) + 200, fill: '#f0f'}, 20000, -> starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1)))
+
+    when 2
+      element.animate({cx: Number(x) + 50, cy: Number(y) - 100, fill: '#becfff'}, 22000, -> starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1)))
+
+    when 3
+      element.animate({cx: Number(x) - 150, cy: Number(y) + 130, fill: '#efffa8'}, 18000, -> starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1)))
+
+    when 4
+      element.animate({cx: Number(x) - 350, cy: Number(y) + 130, fill: '#7dff6d'}, 28000, -> starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1)))
+
 	
 ###########################
 #	Snap SVG
 ##########################
 
 paper = Snap 1920, 1080
-	
+
+bg = paper.rect 0, 0, 1920, 1080
+bg.attr
+  fill: '#0f0f1e'
+
+for i in [0..20]
+  radiusBlur = Math.floor(Math.random() * (10 - 3) + 3)
+  filter = paper.filter(Snap.filter.blur(radiusBlur, radiusBlur))
+  star = paper.circle(Math.floor(Math.random() * $(window).width()), Math.floor(Math.random() * $(window).height()), Math.floor(Math.random() * (10 - 3) + 3))
+  star.attr
+    fill: '#FFF'
+    filter: filter
+    starAnimations(star, Math.floor(Math.random() * (4 - 1) + 1))
+
+
 paper.dblclick (event) ->
 	
 	$('.add').css
