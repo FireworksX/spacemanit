@@ -1,0 +1,6 @@
+*.zip
+*.log
+*.pdf
+*.xls
+
+db.php
