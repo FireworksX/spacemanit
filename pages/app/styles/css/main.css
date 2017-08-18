@@ -1,6 +1,15 @@
 circle {
   cursor: pointer; }
 
+svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; }
+
+body {
+  background-color: #16162c; }
+
 .modal {
   position: fixed;
   left: 0;

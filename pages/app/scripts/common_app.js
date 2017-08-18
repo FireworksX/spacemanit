@@ -1,5 +1,5 @@
 (function() {
-  var active, bg, drawPath, filter, i, j, modalWindow, nodes, paper, pathString, profileActive, radiusBlur, renderNodes, setBlur, showModal, star, starAnimations, startOperations, status, user, vm;
+  var active, drawPath, modalWindow, nodes, paper, pathString, profileActive, renderNodes, setBlur, showModal, starAnimations, startOperations, status, user, vm;
 
   nodes = null;
 
@@ -131,57 +131,57 @@
     r = element.node.attributes.r.value;
     switch (animation) {
       case 1:
-        return element.animate({
-          cx: Number(x) + 300,
-          cy: Number(y) + 200,
-          fill: '#f0f'
+        element.animate({
+          cx: Number(x) + 100,
+          cy: Number(y) + 100,
+          fill: '#ffe2dd'
         }, 20000, function() {
           return starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1));
         });
-      case 2:
         return element.animate({
+          fill: '#fffdf8'
+        }, 1000);
+      case 2:
+        element.animate({
           cx: Number(x) + 50,
           cy: Number(y) - 100,
           fill: '#becfff'
         }, 22000, function() {
           return starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1));
         });
-      case 3:
         return element.animate({
+          fill: '#fffdf8'
+        }, 1000);
+      case 3:
+        element.animate({
           cx: Number(x) - 150,
           cy: Number(y) + 130,
-          fill: '#efffa8'
+          fill: '#f2ffdb'
         }, 18000, function() {
           return starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1));
         });
-      case 4:
         return element.animate({
-          cx: Number(x) - 350,
-          cy: Number(y) + 130,
-          fill: '#7dff6d'
+          fill: '#fffdf8'
+        }, 1000);
+      case 4:
+        element.animate({
+          cx: Number(x) - 150,
+          cy: Number(y) + 330,
+          fill: '#fffdf8'
         }, 28000, function() {
           return starAnimations(element, Math.floor(Math.random() * (4 - 1) + 1));
         });
+        return element.animate({
+          fill: '#fffdf8'
+        }, 1000);
     }
   };
 
-  paper = Snap(1920, 1080);
-
-  bg = paper.rect(0, 0, 1920, 1080);
-
-  bg.attr({
-    fill: '#0f0f1e'
+  particlesJS.load('particles-js', 'pages/app/scripts/particlesjs.json', function() {
+    return console.log('callback - particles.js config loaded');
   });
 
-  for (i = j = 0; j <= 20; i = ++j) {
-    radiusBlur = Math.floor(Math.random() * (10 - 3) + 3);
-    filter = paper.filter(Snap.filter.blur(radiusBlur, radiusBlur));
-    star = paper.circle(Math.floor(Math.random() * $(window).width()), Math.floor(Math.random() * $(window).height()), Math.floor(Math.random() * (10 - 3) + 3));
-    star.attr({
-      fill: '#FFF',
-      filter: filter
-    }, starAnimations(star, Math.floor(Math.random() * (4 - 1) + 1)));
-  }
+  paper = Snap(1920, 1080);
 
   paper.dblclick(function(event) {
     $('.add').css({

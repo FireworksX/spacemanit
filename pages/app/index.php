@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="pages/app/styles/css/main.css">
 </head>
 <body>
+<div id="particles-js"></div>
 <div class="modal">
     <div class="modal__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci corporis cum cupiditate earum et explicabo itaque iusto labore magni maxime necessitatibus numquam optio, qui quo quos voluptatibus? Aspernatur, unde!</div>
 </div>
