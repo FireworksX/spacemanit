@@ -1,5 +1,5 @@
 (function() {
-  var modalWindow, setBlur, showActivate, showModal, symbolForCode, type, validateData, vm;
+  var modalWindow, recovery, register, setBlur, showModal, symbolForCode, validateData, vm;
 
   setBlur = function(element, radius) {
     radius = "blur(" + radius + "px)";
@@ -16,45 +16,27 @@
     });
   };
 
-  showModal = function(type, text, context, callback) {
-    if (arguments.length >= 1) {
-      if (arguments[0] === void 0) {
-        type = 'info';
-      }
-      if (text === '') {
-        text = 'Modal window';
-      }
-      if (context === null || void 0 || '') {
-        context = null;
-      }
-      if (typeof callback !== 'function') {
-        callback = function() {};
-      }
-      $('.modal').addClass("modal_" + type);
-      $('.modal__body').text(text);
-      $('.modal').fadeIn(200, function() {
-        return setBlur('#app', 20);
-      });
-      return setTimeout(function() {
-        return $('.modal').fadeOut(200, function() {
-          $('.modal').removeClass("modal_" + type);
-          setBlur('#app', 0);
-          return callback();
-        });
-      }, 3000);
-    } else {
-      return console.error('Недостаточно аргументов');
+  showModal = function(type, title, text, callback) {
+    var icon;
+    console.log(text);
+    if (typeof type === void 0) {
+      type = 'info';
     }
-  };
-
-  showActivate = function(flag) {
-    if (flag === 1) {
-      setBlur('#app', 20);
-      return $('.activate').fadeIn();
-    } else {
-      setBlur('#app', 0);
-      return $('.activate').fadeOut();
+    switch (type) {
+      case 'info':
+        icon = "<i style='color: #108EE9;' class='zmdi zmdi-info-outline'></i>";
+        break;
+      case 'error':
+        icon = "<i style='color: #ff6f6f;' class='zmdi zmdi-close'></i>";
+        break;
+      case 'warn':
+        icon = "<i style='color: #ffa500;' class='zmdi zmdi-alert-circle'></i>";
+        break;
+      case 'success':
+        icon = "<i style='color: #4bff59;' class='zmdi zmdi-check'></i>";
     }
+    $('.modalwindow__list').append("<li class='modalwindow__item'><div class='modalwindow__icon'>" + icon + "</div><div class='modalwindow__text'><div class='modalwindow__title'>" + title + "</div><p class='modalwindow__body'>" + text + "</p></div></li>");
+    return callback();
   };
 
   validateData = function(type, body) {
@@ -74,6 +56,8 @@
       return /^[A-Z0-9]+$/.test(body);
     }
   };
+
+  showModal('success', 'Test', 'Full Test', null);
 
   Vue.use(VueResource);
 
@@ -130,21 +114,50 @@
     }
   });
 
-  type = 'reg';
+  recovery = 0;
 
-  $('.register__have').on('click', function() {
-    if (type === 'reg') {
-      $('.body-mail').fadeOut();
-      $(this).text('Я хочу зарегистрироваться');
-      return type = 'log';
+  register = 0;
+
+  $('.main__recovery').on('click', function() {
+    if (recovery === 0) {
+      return $('.signin').fadeOut(300, function() {
+        $('.recovery').fadeIn();
+        $('.main__register').hide();
+        $('.main__recovery').text('Я знаю свои данные!');
+        $('.main__start').text('Востановить');
+        return recovery = 1;
+      });
     } else {
-      $('.body-mail').fadeIn();
-      $(this).text('У меня уже есть аккаунт');
-      return type = 'reg';
+      return $('.recovery').fadeOut(300, function() {
+        $('.signin').fadeIn();
+        $('.main__register').show();
+        $('.main__recovery').text('Забыли пароль?');
+        $('.main__start').text('Вход');
+        return recovery = 0;
+      });
+    }
+  });
+
+  $('.main__register').on('click', function() {
+    if (register === 0) {
+      return $('.signin').fadeOut(300, function() {
+        $('.register').fadeIn();
+        $('.main__recovery').hide();
+        $('.main__register').html('<div class="main__register">У меня есть акаунт. <span>Войти!</span></div>');
+        return register = 1;
+      });
+    } else {
+      return $('.register').fadeOut(300, function() {
+        $('.signin').fadeIn();
+        $('.main__recovery').show();
+        $('.main__register').html('<div class="main__register">Вы ещё не снами? <span>Присоединиться!</span></div>');
+        return register = 0;
+      });
     }
   });
 
   $('.body-start').on('click', function() {
+    var type;
     if (type === 'reg') {
       if (validateData('email', vm.dataAuth.email) === true && validateData('login', vm.dataAuth.login) === true && typeof vm.dataAuth.pass !== 'undefined' && vm.dataAuth.pass !== '') {
         vm.registerF();
@@ -210,28 +223,5 @@
         });
     }
   };
-
-  $(document).scroll(function() {
-    $('#comet1').css({
-      top: -500 + $(document).scrollTop()
-    });
-    $('#comet2').css({
-      top: -550 + $(document).scrollTop()
-    });
-    $('#comet3').css({
-      top: -600 + $(document).scrollTop()
-    });
-    return $('#comet4').css({
-      top: -500 + $(document).scrollTop()
-    });
-  });
-
-  $(document).ready(function() {
-    return $('.preloader').fadeOut(1000, function() {
-      return $('body').css({
-        'overflow': 'auto'
-      });
-    });
-  });
 
 }).call(this);

@@ -15,32 +15,22 @@ setBlur = (element, radius) ->
 		'-moz-transition':'all 0.5s ease-out',
 		'-o-transition':'all 0.5s ease-out'
 
-showModal = (type, text, context, callback) ->
-  if arguments.length >= 1
-    if arguments[0] is undefined then type = 'info'
-    if text is '' then text = 'Modal window'
-    if context is null or undefined or '' then context = null
-    if typeof callback isnt 'function' then callback = ->
-    $('.modal').addClass("modal_#{type}")
-    $('.modal__body').text(text)
-    $('.modal').fadeIn(200, -> setBlur('#app', 20))
-    setTimeout( ->
-      $('.modal').fadeOut(200, ->
-        $('.modal').removeClass("modal_#{type}")
-        setBlur('#app', 0)
-        callback())
-    ,3000
-    )
-  else
-    console.error 'Недостаточно аргументов'
+showModal = (type, title, text, callback) ->
+  console.log text
+  if typeof type is undefined then type = 'info'
+  switch type
+    when 'info'
+      icon = "<i style='color: #108EE9;' class='zmdi zmdi-info-outline'></i>"
+    when 'error'
+      icon = "<i style='color: #ff6f6f;' class='zmdi zmdi-close'></i>"
+    when 'warn'
+      icon = "<i style='color: #ffa500;' class='zmdi zmdi-alert-circle'></i>"
+    when 'success'
+      icon = "<i style='color: #4bff59;' class='zmdi zmdi-check'></i>"
 
-showActivate = (flag) ->
-  if flag is 1
-    setBlur('#app', 20)
-    $('.activate').fadeIn()
-  else
-    setBlur('#app', 0)
-    $('.activate').fadeOut()
+  $('.modalwindow__list').append("<li class='modalwindow__item'><div class='modalwindow__icon'>#{icon}</div><div class='modalwindow__text'><div class='modalwindow__title'>#{title}</div><p class='modalwindow__body'>#{text}</p></div></li>")
+  do callback
+
 
 validateData = (type, body) ->
 	if type is 'phone' then return /^\+\d{2}\(\d{3}\)\d{3}-\d{2}-\d{2}$/.test(body)
@@ -54,7 +44,7 @@ validateData = (type, body) ->
 #####################
 	
 
-		
+showModal('success', 'Test', 'Full Test', null)
 
 	
 
@@ -116,20 +106,41 @@ vm = new Vue
   }
 
 
+recovery = 0
+register = 0
+$('.main__recovery').on 'click', ->
+  if recovery is 0
+    $('.signin').fadeOut(300, ->
+      $('.recovery').fadeIn()
+      $('.main__register').hide()
+      $('.main__recovery').text('Я знаю свои данные!')
+      $('.main__start').text('Востановить')
+      recovery = 1
+    )
+  else
+    $('.recovery').fadeOut(300, ->
+      $('.signin').fadeIn()
+      $('.main__register').show()
+      $('.main__recovery').text('Забыли пароль?')
+      $('.main__start').text('Вход')
+      recovery = 0
+    )
 
-
-type = 'reg'
-
-$('.register__have').on 'click', ->
-	if type is 'reg'
-		$('.body-mail').fadeOut()
-		$(@).text('Я хочу зарегистрироваться')
-		type = 'log'
-	else 
-		$('.body-mail').fadeIn()
-		$(@).text('У меня уже есть аккаунт')
-		type = 'reg'
-
+$('.main__register').on 'click', ->
+  if register is 0
+    $('.signin').fadeOut(300, ->
+      $('.register').fadeIn()
+      $('.main__recovery').hide()
+      $('.main__register').html('<div class="main__register">У меня есть акаунт. <span>Войти!</span></div>')
+      register = 1
+    )
+  else
+    $('.register').fadeOut(300, ->
+      $('.signin').fadeIn()
+      $('.main__recovery').show()
+      $('.main__register').html('<div class="main__register">Вы ещё не снами? <span>Присоединиться!</span></div>')
+      register = 0
+    )
 
 $('.body-start').on 'click', ->
   if type is 'reg'
@@ -190,23 +201,7 @@ modalWindow = (value) ->
 
 		when '306'
       showModal('warn','Необходимо активировать ваш аккаунт', null, -> vm.mailActivation())
-				
-	
-$(document).scroll ->
-	$('#comet1').css
-		top: -500 + $(document).scrollTop() 
-	$('#comet2').css
-		top: -550 + $(document).scrollTop()
-	$('#comet3').css
-		top: -600 + $(document).scrollTop()
-	$('#comet4').css
-		top: -500 + $(document).scrollTop()
-		
-		
-$(document).ready -> 
-	$('.preloader').fadeOut(1000, ->
-		$('body').css
-			'overflow': 'auto')
+
 	
 
 
