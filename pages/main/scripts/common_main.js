@@ -37,11 +37,15 @@
       case 'success':
         icon = "<i style='color: #4bff59;' class='zmdi zmdi-check'></i>";
     }
-    object = "<li class='modalwindow__item  animated slideInRight'><div class='modalwindow__icon'>" + icon + "</div><div class='modalwindow__text'><div class='modalwindow__title'>" + title + "</div><p class='modalwindow__body'>" + text + "</p></div></li>";
+    object = $("<li class='modalwindow__item  animated slideInRight'><div class='modalwindow__icon'>" + icon + "</div><div class='modalwindow__text'><div class='modalwindow__title'>" + title + "</div><p class='modalwindow__body'>" + text + "</p></div></li>");
     $('.modalwindow__list').append(object);
-    return setTimeout(function() {
-      return $('.modalwindow__item').last().removeClass('slideInRight').addClass('zoomOutUp');
+    console.log(object);
+    setTimeout(function() {
+      return object.removeClass('slideInRight').addClass('zoomOutUp');
     }, timeOut);
+    return setTimeout(function() {
+      return object.remove();
+    }, timeOut + 1000);
   };
 
   validateData = function(type, body) {

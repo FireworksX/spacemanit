@@ -29,14 +29,16 @@ showModal = (type, title, text, timeOut, callback) ->
       icon = "<i style='color: #ffa500;' class='zmdi zmdi-alert-circle'></i>"
     when 'success'
       icon = "<i style='color: #4bff59;' class='zmdi zmdi-check'></i>"
-  object = "<li class='modalwindow__item  animated slideInRight'><div class='modalwindow__icon'>#{icon}</div><div class='modalwindow__text'><div class='modalwindow__title'>#{title}</div><p class='modalwindow__body'>#{text}</p></div></li>"
+  object = $("<li class='modalwindow__item  animated slideInRight'><div class='modalwindow__icon'>#{icon}</div><div class='modalwindow__text'><div class='modalwindow__title'>#{title}</div><p class='modalwindow__body'>#{text}</p></div></li>")
   $('.modalwindow__list').append(object)
-
+  console.log object
   setTimeout(->
-    $('.modalwindow__item').last().removeClass('slideInRight').addClass('zoomOutUp')
-
+    object.removeClass('slideInRight').addClass('zoomOutUp')
   , timeOut)
 
+  setTimeout(->
+    object.remove()
+  , timeOut + 1000)
 
 
 
