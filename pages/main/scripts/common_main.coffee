@@ -18,6 +18,7 @@ setBlur = (element, radius) ->
 
 
 showModal = (type, title, text, timeOut, callback) ->
+  console.log arguments
   if typeof type is undefined then type = 'info'
   if typeof callback isnt "function" then callback = ->
   switch type
@@ -31,13 +32,13 @@ showModal = (type, title, text, timeOut, callback) ->
       icon = "<i style='color: #4bff59;' class='zmdi zmdi-check'></i>"
   object = $("<li class='modalwindow__item  animated slideInRight'><div class='modalwindow__icon'>#{icon}</div><div class='modalwindow__text'><div class='modalwindow__title'>#{title}</div><p class='modalwindow__body'>#{text}</p></div></li>")
   $('.modalwindow__list').append(object)
-  console.log object
   setTimeout(->
     object.removeClass('slideInRight').addClass('zoomOutUp')
   , timeOut)
 
   setTimeout(->
     object.remove()
+    do callback
   , timeOut + 1000)
 
 
@@ -49,7 +50,7 @@ validateData = (type, body) ->
 	if type is 'email' then return /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(body)
 	if type is 'login' then return /^[a-zA-Z0-9]+$/.test(body)
 	if type is 'pass' then return /^[a-zA-Z0-9]+$/.test(body)
-	if type is 'code' then return /^[A-Z0-9]+$/.test(body)
+	if type is 'code' then return /^[0-9]+$/.test(body)
 
 #####################
 #	Snap
@@ -78,11 +79,12 @@ Vue.use VueResource
 #############################################
 
 
-symbolForCode = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0']
+symbolForCode = ['1','2','3','4','5','6','7','8','9','0']
 vm = new Vue
 	el: "#app"
 	data:
 		dataAuth: {}
+		confirmCode: 1
 		activate: {
       action: 1
       code: ''
@@ -101,14 +103,14 @@ vm = new Vue
         (error) ->
           console.log error
           modalWindow('300'))
-    registerF: ->
+    register: ->
       @$http.post("pages/main/includes/register.php?register=", @dataAuth).then((res) ->
         console.log res
         modalWindow(res.data)
         (error) ->
           console.log error
           modalWindow('300'))
-    loginF: ->
+    signin: ->
       @$http.post("pages/main/includes/login.php?login=", @dataAuth).then((res) ->
         modalWindow(res.data);
         console.log @.dataAuth
@@ -120,6 +122,7 @@ vm = new Vue
 
 recovery = 0
 register = 0
+type = 'signin'
 $('.main__recovery').on 'click', ->
   if recovery is 0
     $('.signin').fadeOut(300, ->
@@ -128,6 +131,7 @@ $('.main__recovery').on 'click', ->
       $('.main__recovery').text('Я знаю свои данные!')
       $('.main__start').text('Востановить')
       recovery = 1
+      type = 'recovery'
     )
   else
     $('.recovery').fadeOut(300, ->
@@ -136,6 +140,7 @@ $('.main__recovery').on 'click', ->
       $('.main__recovery').text('Забыли пароль?')
       $('.main__start').text('Вход')
       recovery = 0
+      type = 'signin'
     )
 
 $('.main__register').on 'click', ->
@@ -144,34 +149,53 @@ $('.main__register').on 'click', ->
       $('.register').fadeIn()
       $('.main__recovery').hide()
       $('.main__register').html('<div class="main__register">У меня есть акаунт. <span>Войти!</span></div>')
+      $('.main__start').text('Зарегистрироваться')
       register = 1
+      type = 'register'
     )
   else
     $('.register').fadeOut(300, ->
       $('.signin').fadeIn()
       $('.main__recovery').show()
       $('.main__register').html('<div class="main__register">Вы ещё не снами? <span>Присоединиться!</span></div>')
+      $('.main__start').text('Вход')
       register = 0
+      type = 'login'
     )
 
-$('.body-start').on 'click', ->
-  if type is 'reg'
-    if validateData('email', vm.dataAuth.email) is true and validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
-      vm.registerF()
-      type = 'reg'
-    else
-      alert 'Ошибка введёных данных.'
-      return
-  else
-    if validateData('login', vm.dataAuth.login) is true and typeof vm.dataAuth.pass isnt 'undefined' and vm.dataAuth.pass isnt ''
-      vm.loginF()
-      type = 'log'
-    else
-      alert 'Ошибка введёных данных'
+$('.main__start').on 'click', ->
+  $('.register__firstname, .register__lastname, .register__login, .register__mail, .register__password, .register__confpassword').removeClass('input_bad')
+  if type is 'register'
+    if typeof vm.dataAuth.firstname is 'undefined' or vm.dataAuth.firstname is ''
+      $('.register__firstname').addClass('input_bad')
       return
 
-$('.main__start').on 'click', ->
-  showModal('success', 'Test', 'Full Test', 3000)
+    if typeof vm.dataAuth.lastname is 'undefined' or vm.dataAuth.lastname is ''
+      $('.register__lastname').addClass('input_bad')
+      return
+
+    if typeof vm.dataAuth.login is 'undefined' or vm.dataAuth.login is ''
+      $('.register__login').addClass('input_bad')
+      return
+
+    if validateData('email', vm.dataAuth.email) isnt true
+      $('.register__mail').addClass('input_bad')
+      return
+
+    if typeof vm.dataAuth.password is 'undefined' or vm.dataAuth.password is '' or vm.dataAuth.password isnt vm.dataAuth.confpassword
+      $('.register__password').addClass('input_bad')
+      $('.register__confpassword').addClass('input_bad')
+      return
+
+    vm.dataAuth.password = btoa(vm.dataAuth.password)
+    vm.register()
+
+  if type is 'confirm'
+    if vm.activate.code is vm.confirmCode
+      vm.activate.action = 2
+      vm.mailActivation()
+    else
+      $('.confirm__code').addClass('input_bad')
 
 
 $('.activate__button').on 'click', ->
@@ -185,22 +209,26 @@ $('.activate__button').on 'click', ->
 modalWindow = (value) ->
 	switch value
 		when '200'
-			showModal('good',"Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!", null, -> vm.mailActivation())
+			showModal('info', "Регистрация", "Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!", 3000, -> vm.mailActivation())
 
 		when '201'
       showModal('good',"Пользователь: #{vm.dataAuth.login} успешно авторизирован!", null, -> window.location.reload())
 
 		when '203'
-      showModal('good',"Письмо успрешно отправленно пользователю: #{vm.dataAuth.login}", null, -> showActivate(1))
+      showModal('success', 'Подтверждение',"Письмо успрешно отправленно пользователю: #{vm.dataAuth.login}", 3000, ->
+      type = 'confirm'
+      $('.main__start').text('Подтвердить')
+      $('.register').hide()
+      $('.confirm').show())
 
 		when '204'
-      showModal('good',"Почта успешно подтверждена! Удачи в обучении.", null, -> showActivate(2))
+      showModal('success', 'Подтверждение',"Почта успешно подтверждена. Удачи в обучении!", 3000, -> window.location.reload())
 
 		when '300'
-			showModal('error','Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.')
+			showModal('error', 'Ошибка','Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.', 3000)
 
 		when '301'
-			showModal('error','Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!')
+      showModal('error', "Регистрация", "Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!", 3000)
 
 		when '302'
       showModal('error','Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.')
@@ -212,7 +240,7 @@ modalWindow = (value) ->
       showModal('error','Пароль введён не верно!')
 
 		when '305'
-      showModal('error','Произошла ошибка при отправке письма')
+      showModal('error', 'Подтверждение',"Произошла ошибка при отправке письма", 3000)
 
 		when '306'
       showModal('warn','Необходимо активировать ваш аккаунт', null, -> vm.mailActivation())

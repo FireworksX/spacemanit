@@ -1,5 +1,5 @@
 (function() {
-  var modalWindow, recovery, register, setBlur, showModal, symbolForCode, validateData, vm;
+  var modalWindow, recovery, register, setBlur, showModal, symbolForCode, type, validateData, vm;
 
   setBlur = function(element, radius) {
     radius = "blur(" + radius + "px)";
@@ -18,6 +18,7 @@
 
   showModal = function(type, title, text, timeOut, callback) {
     var icon, object;
+    console.log(arguments);
     if (typeof type === void 0) {
       type = 'info';
     }
@@ -39,12 +40,12 @@
     }
     object = $("<li class='modalwindow__item  animated slideInRight'><div class='modalwindow__icon'>" + icon + "</div><div class='modalwindow__text'><div class='modalwindow__title'>" + title + "</div><p class='modalwindow__body'>" + text + "</p></div></li>");
     $('.modalwindow__list').append(object);
-    console.log(object);
     setTimeout(function() {
       return object.removeClass('slideInRight').addClass('zoomOutUp');
     }, timeOut);
     return setTimeout(function() {
-      return object.remove();
+      object.remove();
+      return callback();
     }, timeOut + 1000);
   };
 
@@ -62,18 +63,19 @@
       return /^[a-zA-Z0-9]+$/.test(body);
     }
     if (type === 'code') {
-      return /^[A-Z0-9]+$/.test(body);
+      return /^[0-9]+$/.test(body);
     }
   };
 
   Vue.use(VueResource);
 
-  symbolForCode = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+  symbolForCode = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
 
   vm = new Vue({
     el: "#app",
     data: {
       dataAuth: {},
+      confirmCode: 1,
       activate: {
         action: 1,
         code: '',
@@ -98,7 +100,7 @@
           };
         });
       },
-      registerF: function() {
+      register: function() {
         return this.$http.post("pages/main/includes/register.php?register=", this.dataAuth).then(function(res) {
           console.log(res);
           modalWindow(res.data);
@@ -108,7 +110,7 @@
           };
         });
       },
-      loginF: function() {
+      signin: function() {
         return this.$http.post("pages/main/includes/login.php?login=", this.dataAuth).then(function(res) {
           modalWindow(res.data);
           console.log(this.dataAuth);
@@ -125,6 +127,8 @@
 
   register = 0;
 
+  type = 'signin';
+
   $('.main__recovery').on('click', function() {
     if (recovery === 0) {
       return $('.signin').fadeOut(300, function() {
@@ -132,7 +136,8 @@
         $('.main__register').hide();
         $('.main__recovery').text('Я знаю свои данные!');
         $('.main__start').text('Востановить');
-        return recovery = 1;
+        recovery = 1;
+        return type = 'recovery';
       });
     } else {
       return $('.recovery').fadeOut(300, function() {
@@ -140,7 +145,8 @@
         $('.main__register').show();
         $('.main__recovery').text('Забыли пароль?');
         $('.main__start').text('Вход');
-        return recovery = 0;
+        recovery = 0;
+        return type = 'signin';
       });
     }
   });
@@ -151,39 +157,57 @@
         $('.register').fadeIn();
         $('.main__recovery').hide();
         $('.main__register').html('<div class="main__register">У меня есть акаунт. <span>Войти!</span></div>');
-        return register = 1;
+        $('.main__start').text('Зарегистрироваться');
+        register = 1;
+        return type = 'register';
       });
     } else {
       return $('.register').fadeOut(300, function() {
         $('.signin').fadeIn();
         $('.main__recovery').show();
         $('.main__register').html('<div class="main__register">Вы ещё не снами? <span>Присоединиться!</span></div>');
-        return register = 0;
+        $('.main__start').text('Вход');
+        register = 0;
+        return type = 'login';
       });
     }
   });
 
-  $('.body-start').on('click', function() {
-    var type;
-    if (type === 'reg') {
-      if (validateData('email', vm.dataAuth.email) === true && validateData('login', vm.dataAuth.login) === true && typeof vm.dataAuth.pass !== 'undefined' && vm.dataAuth.pass !== '') {
-        vm.registerF();
-        return type = 'reg';
-      } else {
-        alert('Ошибка введёных данных.');
+  $('.main__start').on('click', function() {
+    $('.register__firstname, .register__lastname, .register__login, .register__mail, .register__password, .register__confpassword').removeClass('input_bad');
+    if (type === 'register') {
+      if (typeof vm.dataAuth.firstname === 'undefined' || vm.dataAuth.firstname === '') {
+        $('.register__firstname').addClass('input_bad');
+        return;
       }
-    } else {
-      if (validateData('login', vm.dataAuth.login) === true && typeof vm.dataAuth.pass !== 'undefined' && vm.dataAuth.pass !== '') {
-        vm.loginF();
-        return type = 'log';
+      if (typeof vm.dataAuth.lastname === 'undefined' || vm.dataAuth.lastname === '') {
+        $('.register__lastname').addClass('input_bad');
+        return;
+      }
+      if (typeof vm.dataAuth.login === 'undefined' || vm.dataAuth.login === '') {
+        $('.register__login').addClass('input_bad');
+        return;
+      }
+      if (validateData('email', vm.dataAuth.email) !== true) {
+        $('.register__mail').addClass('input_bad');
+        return;
+      }
+      if (typeof vm.dataAuth.password === 'undefined' || vm.dataAuth.password === '' || vm.dataAuth.password !== vm.dataAuth.confpassword) {
+        $('.register__password').addClass('input_bad');
+        $('.register__confpassword').addClass('input_bad');
+        return;
+      }
+      vm.dataAuth.password = btoa(vm.dataAuth.password);
+      vm.register();
+    }
+    if (type === 'confirm') {
+      if (vm.activate.code === vm.confirmCode) {
+        vm.activate.action = 2;
+        return vm.mailActivation();
       } else {
-        alert('Ошибка введёных данных');
+        return $('.confirm__code').addClass('input_bad');
       }
     }
-  });
-
-  $('.main__start').on('click', function() {
-    return showModal('success', 'Test', 'Full Test', 3000);
   });
 
   $('.activate__button').on('click', function() {
@@ -201,7 +225,7 @@
   modalWindow = function(value) {
     switch (value) {
       case '200':
-        return showModal('good', "Пользователь: " + vm.dataAuth.login + " успешно зарегистрирован!", null, function() {
+        return showModal('info', "Регистрация", "Пользователь: " + vm.dataAuth.login + " успешно зарегистрирован!", 3000, function() {
           return vm.mailActivation();
         });
       case '201':
@@ -209,17 +233,15 @@
           return window.location.reload();
         });
       case '203':
-        return showModal('good', "Письмо успрешно отправленно пользователю: " + vm.dataAuth.login, null, function() {
-          return showActivate(1);
-        });
+        return showModal('success', 'Подтверждение', "Письмо успрешно отправленно пользователю: " + vm.dataAuth.login, 3000, function() {}, type = 'confirm', $('.main__start').text('Подтвердить'), $('.register').hide(), $('.confirm').show());
       case '204':
-        return showModal('good', "Почта успешно подтверждена! Удачи в обучении.", null, function() {
-          return showActivate(2);
+        return showModal('success', 'Подтверждение', "Почта успешно подтверждена. Удачи в обучении!", 3000, function() {
+          return window.location.reload();
         });
       case '300':
-        return showModal('error', 'Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.');
+        return showModal('error', 'Ошибка', 'Возникла ошибка при отправке запроса на регистрацию! Проверьте соединение с интернетом или повторите попытку позже.', 3000);
       case '301':
-        return showModal('error', 'Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!');
+        return showModal('error', "Регистрация", "Возникла ошибка при регистрации пользователя! Пользователь с таким логином или почтой уже зарегистрирован!", 3000);
       case '302':
         return showModal('error', 'Возникла ошибка при отправке запроса на авторизацию пользователя! Проверьте соединение с интернетом или повторите попытку позже.');
       case '303':
@@ -227,7 +249,7 @@
       case '304':
         return showModal('error', 'Пароль введён не верно!');
       case '305':
-        return showModal('error', 'Произошла ошибка при отправке письма');
+        return showModal('error', 'Подтверждение', "Произошла ошибка при отправке письма", 3000);
       case '306':
         return showModal('warn', 'Необходимо активировать ваш аккаунт', null, function() {
           return vm.mailActivation();

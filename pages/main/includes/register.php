@@ -7,12 +7,15 @@
 	}else{
 		$users = R::dispense('users');
 		$users->login = $data['login'];
-		$users->password = md5($data['pass']);
+		$users->password = $data['password'];
+		$users->firstname = $data['firstname'];
+		$users->firstname = $data['lastname'];
 		$users->email = $data['email'];
 		$users->nodes = '';
 		$users->active = 0;
+		$users->visites = 0;
 		$users->join_date = date("Y-m-d H:i:s");
-		$users->money = base64_encode(0);
+		$users->money = 0;
 		R::store($users);
 		echo 200;
 	}

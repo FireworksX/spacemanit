@@ -95,6 +95,12 @@ input {
   input:focus {
     border: 1px solid #5479b5; }
 
+.input_bad {
+  border: 1px solid #d96b53; }
+
+.input_good {
+  border: 1px solid #9dd97e; }
+
 .main__start {
   background: #03BED1;
   padding: 12px;

@@ -55,6 +55,7 @@ if(!$mail->Send())
         if($user){
             $user->active = 1;
             R::store($user);
+            $_SESSION['id'] = $user->id;
             echo '204';
         }
     }else {

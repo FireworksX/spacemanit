@@ -27,15 +27,15 @@
                 <input type="text" placeholder="Пароль" type="password" class="signin__password">
             </div>
             <div class="register">
-                <input type="text" placeholder="Имя" class="register__firstname">
-                <input type="text" placeholder="Фамилия" class="register__lastname">
-                <input type="text" placeholder="Логин" class="register__login">
-                <input type="email" placeholder="Почта" class="register__mail">
-                <input type="password" placeholder="Пароль" class="register__password">
-                <input type="password" placeholder="Ещё раз пароль" class="register__confpassword">
+                <input type="text" v-model="dataAuth.firstname" placeholder="Имя" class="register__firstname">
+                <input type="text" v-model="dataAuth.lastname" placeholder="Фамилия" class="register__lastname">
+                <input type="text" v-model="dataAuth.login" placeholder="Логин" class="register__login">
+                <input type="email" v-model="dataAuth.email" placeholder="Почта" class="register__mail">
+                <input type="password" v-model="dataAuth.password" placeholder="Пароль" class="register__password">
+                <input type="password" v-model="dataAuth.confpassword" placeholder="Ещё раз пароль" class="register__confpassword">
             </div>
             <div class="confirm">
-                <input type="text" placeholder="Код из письма" maxlength="5" class="confirm__code">
+                <input type="number" v-model="confirmCode" placeholder="Код из письма" maxlength="5" class="confirm__code">
             </div>
             <div class="recovery">
                 <input type="email" placeholder="Почта" class="recovery__email">
