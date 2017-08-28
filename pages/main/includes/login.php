@@ -5,7 +5,7 @@
 	$data = json_decode($json, JSON_BIGINT_AS_STRING);
 	$user = R::findOne('users', 'login = ?', array($data['login']));
 	if($user){
-		$hash = md5($data['pass']);
+		$hash = $data['password'];
 		if($hash == $user->password){
 		    if($user->active == 1) {
                 $_SESSION['id'] = $user->id;

@@ -113,6 +113,7 @@
       signin: function() {
         return this.$http.post("pages/main/includes/login.php?login=", this.dataAuth).then(function(res) {
           modalWindow(res.data);
+          console.log(res);
           console.log(this.dataAuth);
           return function(error) {
             console.log(error);
@@ -168,13 +169,13 @@
         $('.main__register').html('<div class="main__register">Вы ещё не снами? <span>Присоединиться!</span></div>');
         $('.main__start').text('Вход');
         register = 0;
-        return type = 'login';
+        return type = 'signin';
       });
     }
   });
 
   $('.main__start').on('click', function() {
-    $('.register__firstname, .register__lastname, .register__login, .register__mail, .register__password, .register__confpassword').removeClass('input_bad');
+    $('.register__firstname, .register__lastname, .register__login, .register__mail, .register__password, .register__confpassword, .signin__login, .signin__password').removeClass('input_bad');
     if (type === 'register') {
       if (typeof vm.dataAuth.firstname === 'undefined' || vm.dataAuth.firstname === '') {
         $('.register__firstname').addClass('input_bad');
@@ -203,10 +204,22 @@
     if (type === 'confirm') {
       if (vm.activate.code === vm.confirmCode) {
         vm.activate.action = 2;
-        return vm.mailActivation();
+        vm.mailActivation();
       } else {
-        return $('.confirm__code').addClass('input_bad');
+        $('.confirm__code').addClass('input_bad');
       }
+    }
+    if (type === 'signin') {
+      if (typeof vm.dataAuth.login === 'undefined' || vm.dataAuth.login === '') {
+        $('.signin__login').addClass('input_bad');
+        return;
+      }
+      if (typeof vm.dataAuth.password === 'undefined' || vm.dataAuth.password === '') {
+        $('.signin__password').addClass('input_bad');
+        return;
+      }
+      vm.dataAuth.password = btoa(vm.dataAuth.password);
+      return vm.signin();
     }
   });
 
@@ -229,11 +242,16 @@
           return vm.mailActivation();
         });
       case '201':
-        return showModal('good', "Пользователь: " + vm.dataAuth.login + " успешно авторизирован!", null, function() {
+        return showModal('success', 'Авторизация', "Пользователь: " + vm.dataAuth.login + " успешно авторизирован!", 3000, function() {
           return window.location.reload();
         });
       case '203':
-        return showModal('success', 'Подтверждение', "Письмо успрешно отправленно пользователю: " + vm.dataAuth.login, 3000, function() {}, type = 'confirm', $('.main__start').text('Подтвердить'), $('.register').hide(), $('.confirm').show());
+        return showModal('success', 'Подтверждение', "Письмо успрешно отправленно пользователю: " + vm.dataAuth.login, 3000, function() {
+          type = 'confirm';
+          $('.main__start').text('Подтвердить');
+          $('.register').hide();
+          return $('.confirm').show();
+        });
       case '204':
         return showModal('success', 'Подтверждение', "Почта успешно подтверждена. Удачи в обучении!", 3000, function() {
           return window.location.reload();

@@ -23,8 +23,8 @@
             <div class="main__head"></div>
             <div class="main__authvk"><i class="zmdi zmdi-vk"></i> Войти с помощью VK</div>
             <div class="signin">
-                <input type="text" placeholder="Логин" class="signin__login">
-                <input type="text" placeholder="Пароль" type="password" class="signin__password">
+                <input type="text" v-model="dataAuth.login" placeholder="Логин" class="signin__login">
+                <input type="text" v-model="dataAuth.password" placeholder="Пароль" type="password" class="signin__password">
             </div>
             <div class="register">
                 <input type="text" v-model="dataAuth.firstname" placeholder="Имя" class="register__firstname">

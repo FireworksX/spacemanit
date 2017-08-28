@@ -76,6 +76,8 @@ Vue.use VueResource
 ## 2 - Send mail with text that account activate
 ## and set in DataBase "activate = true"
 ##
+## 3 - Recovery mode
+##
 #############################################
 
 
@@ -113,6 +115,7 @@ vm = new Vue
     signin: ->
       @$http.post("pages/main/includes/login.php?login=", @dataAuth).then((res) ->
         modalWindow(res.data);
+        console.log res
         console.log @.dataAuth
         (error) ->
           console.log error
@@ -160,11 +163,11 @@ $('.main__register').on 'click', ->
       $('.main__register').html('<div class="main__register">Вы ещё не снами? <span>Присоединиться!</span></div>')
       $('.main__start').text('Вход')
       register = 0
-      type = 'login'
+      type = 'signin'
     )
 
 $('.main__start').on 'click', ->
-  $('.register__firstname, .register__lastname, .register__login, .register__mail, .register__password, .register__confpassword').removeClass('input_bad')
+  $('.register__firstname, .register__lastname, .register__login, .register__mail, .register__password, .register__confpassword, .signin__login, .signin__password').removeClass('input_bad')
   if type is 'register'
     if typeof vm.dataAuth.firstname is 'undefined' or vm.dataAuth.firstname is ''
       $('.register__firstname').addClass('input_bad')
@@ -197,6 +200,16 @@ $('.main__start').on 'click', ->
     else
       $('.confirm__code').addClass('input_bad')
 
+  if type is 'signin'
+    if typeof vm.dataAuth.login is 'undefined' or vm.dataAuth.login is ''
+      $('.signin__login').addClass('input_bad')
+      return
+    if typeof vm.dataAuth.password is 'undefined' or vm.dataAuth.password is ''
+      $('.signin__password').addClass('input_bad')
+      return
+    vm.dataAuth.password = btoa(vm.dataAuth.password)
+    vm.signin()
+
 
 $('.activate__button').on 'click', ->
   if validateData('code', $('.activate__input').val()) isnt true then return
@@ -212,14 +225,14 @@ modalWindow = (value) ->
 			showModal('info', "Регистрация", "Пользователь: #{vm.dataAuth.login} успешно зарегистрирован!", 3000, -> vm.mailActivation())
 
 		when '201'
-      showModal('good',"Пользователь: #{vm.dataAuth.login} успешно авторизирован!", null, -> window.location.reload())
+      showModal('success', 'Авторизация', "Пользователь: #{vm.dataAuth.login} успешно авторизирован!", 3000, -> window.location.reload())
 
 		when '203'
       showModal('success', 'Подтверждение',"Письмо успрешно отправленно пользователю: #{vm.dataAuth.login}", 3000, ->
-      type = 'confirm'
-      $('.main__start').text('Подтвердить')
-      $('.register').hide()
-      $('.confirm').show())
+        type = 'confirm'
+        $('.main__start').text('Подтвердить')
+        $('.register').hide()
+        $('.confirm').show())
 
 		when '204'
       showModal('success', 'Подтверждение',"Почта успешно подтверждена. Удачи в обучении!", 3000, -> window.location.reload())
