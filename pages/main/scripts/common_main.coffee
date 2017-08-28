@@ -15,9 +15,11 @@ setBlur = (element, radius) ->
 		'-moz-transition':'all 0.5s ease-out',
 		'-o-transition':'all 0.5s ease-out'
 
-showModal = (type, title, text, callback) ->
-  console.log text
+
+
+showModal = (type, title, text, timeOut, callback) ->
   if typeof type is undefined then type = 'info'
+  if typeof callback isnt "function" then callback = ->
   switch type
     when 'info'
       icon = "<i style='color: #108EE9;' class='zmdi zmdi-info-outline'></i>"
@@ -27,9 +29,17 @@ showModal = (type, title, text, callback) ->
       icon = "<i style='color: #ffa500;' class='zmdi zmdi-alert-circle'></i>"
     when 'success'
       icon = "<i style='color: #4bff59;' class='zmdi zmdi-check'></i>"
+  object = "<li class='modalwindow__item  animated slideInRight'><div class='modalwindow__icon'>#{icon}</div><div class='modalwindow__text'><div class='modalwindow__title'>#{title}</div><p class='modalwindow__body'>#{text}</p></div></li>"
+  $('.modalwindow__list').append(object)
 
-  $('.modalwindow__list').append("<li class='modalwindow__item'><div class='modalwindow__icon'>#{icon}</div><div class='modalwindow__text'><div class='modalwindow__title'>#{title}</div><p class='modalwindow__body'>#{text}</p></div></li>")
-  do callback
+  setTimeout(->
+    $('.modalwindow__item').last().removeClass('slideInRight').addClass('zoomOutUp')
+
+  , timeOut)
+
+
+
+
 
 
 validateData = (type, body) ->
@@ -44,7 +54,7 @@ validateData = (type, body) ->
 #####################
 	
 
-showModal('success', 'Test', 'Full Test', null)
+
 
 	
 
@@ -157,6 +167,9 @@ $('.body-start').on 'click', ->
     else
       alert 'Ошибка введёных данных'
       return
+
+$('.main__start').on 'click', ->
+  showModal('success', 'Test', 'Full Test', 3000)
 
 
 $('.activate__button').on 'click', ->

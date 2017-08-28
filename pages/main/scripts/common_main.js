@@ -16,11 +16,13 @@
     });
   };
 
-  showModal = function(type, title, text, callback) {
-    var icon;
-    console.log(text);
+  showModal = function(type, title, text, timeOut, callback) {
+    var icon, object;
     if (typeof type === void 0) {
       type = 'info';
+    }
+    if (typeof callback !== "function") {
+      callback = function() {};
     }
     switch (type) {
       case 'info':
@@ -35,8 +37,11 @@
       case 'success':
         icon = "<i style='color: #4bff59;' class='zmdi zmdi-check'></i>";
     }
-    $('.modalwindow__list').append("<li class='modalwindow__item'><div class='modalwindow__icon'>" + icon + "</div><div class='modalwindow__text'><div class='modalwindow__title'>" + title + "</div><p class='modalwindow__body'>" + text + "</p></div></li>");
-    return callback();
+    object = "<li class='modalwindow__item  animated slideInRight'><div class='modalwindow__icon'>" + icon + "</div><div class='modalwindow__text'><div class='modalwindow__title'>" + title + "</div><p class='modalwindow__body'>" + text + "</p></div></li>";
+    $('.modalwindow__list').append(object);
+    return setTimeout(function() {
+      return $('.modalwindow__item').last().removeClass('slideInRight').addClass('zoomOutUp');
+    }, timeOut);
   };
 
   validateData = function(type, body) {
@@ -56,8 +61,6 @@
       return /^[A-Z0-9]+$/.test(body);
     }
   };
-
-  showModal('success', 'Test', 'Full Test', null);
 
   Vue.use(VueResource);
 
@@ -173,6 +176,10 @@
         alert('Ошибка введёных данных');
       }
     }
+  });
+
+  $('.main__start').on('click', function() {
+    return showModal('success', 'Test', 'Full Test', 3000);
   });
 
   $('.activate__button').on('click', function() {

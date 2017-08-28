@@ -3,10 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Spaceman IT - запрграммируй свой мозг</title>
-	<link rel="stylesheet" type="text/css" href="styles/css/libs.min.css">
-	<link rel="stylesheet" type="text/css" href="styles/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="styles/css/main.css">
-	<meta name="viewport" content="width=1170">
+	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/libs.min.css">
+	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/animate.css">
+	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="pages/main/styles/css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 </head>
@@ -47,7 +48,7 @@
 </div>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
-	<script src="scripts/libs.min.js"></script>
-	<script src="scripts/common_main.js"></script>
+	<script src="pages/main/scripts/libs.min.js"></script>
+	<script src="pages/main/scripts/common_main.js"></script>
 </body>
 </html>
