@@ -32,6 +32,7 @@ gulp.task('scripts', function(){
        'libs/jquery/dist/jquery.min.js', 
 	   'libs/Snap.svg/dist/snap.svg-min.js',
 	   'libs/velocity/velocity.min.js',
+	   'libs/particles.js/particles.min.js',
        'libs/bootstrap/dist/js/bootstrap.min.js',
    ]).pipe(concat('libs.min.js'))
     .pipe(uglify())
