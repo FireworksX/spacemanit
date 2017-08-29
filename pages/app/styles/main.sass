@@ -5,7 +5,6 @@ svg
   position: absolute
   top: 0
   left: 0
-  z-index: -1
 
 body
   background-color: #16162c
@@ -123,17 +122,18 @@ $font: 'PF Agora Sans Pro'
 
 
 .bar-circle 
-	position: fixed
-	top: 30px
-	left: 30px
-	background-color: #222
-	width: 50px
-	height: 50px
-	border-radius: 50%
-	transition: .4s
-	&:hover 
-		background: #11284b
-		cursor: pointer
+  position: fixed
+  top: 30px
+  left: 30px
+  background-color: #222
+  width: 50px
+  height: 50px
+  display: none
+  border-radius: 50%
+  transition: .4s
+  &:hover
+  	background: #11284b
+  	cursor: pointer
 	
 
 
@@ -168,9 +168,10 @@ $font: 'PF Agora Sans Pro'
 	font-weight: 400
 	font-size: 25px
 	margin-right: 10px
-	border-right: 1px solid #000
+	border-right: 1px solid #fff
 	padding-right: 10px
 	cursor: pointer
+	color: #ffffff
 
 
 .breadcrumbs__second 
@@ -180,6 +181,7 @@ $font: 'PF Agora Sans Pro'
 	font-weight: 300
 	font-size: 25px
 	cursor: pointer
+	color: #ffffff
 
 
 /* Profile */

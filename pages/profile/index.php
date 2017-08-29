@@ -6,7 +6,8 @@
 	<link rel="stylesheet" type="text/css" href="styles/css/libs.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="styles/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="styles/css/main.css">
+    <link rel="stylesheet" type="text/css" href="styles/css/main.css">
+    <link rel="stylesheet" type="text/css" href="styles/css/response.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
@@ -16,7 +17,7 @@
     <div class="top-bar">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-2 top-bar__logo">Spaceman IT</div>
+                <div class="col-3 top-bar__logo">Spaceman IT</div>
                 <div class="col-2 ml-auto top-bar__right">
                     <div class="top-bar__notification"><i class="zmdi zmdi-notifications-none"></i></div>
                     <div class="top-bar__profile">
@@ -50,13 +51,13 @@
                         <img class="avatar__link" src="https://s-media-cache-ak0.pinimg.com/originals/0c/0a/17/0c0a172a8e86c103bfbdfd164488961c.jpg" alt="avatar">
                     </div>
                     <div class="content__firstline">
-                        <div class="col-md-3 col-md-offset-3 content__name">
+                        <div class="col-md-4 col-md-offset-4 col-lg-offset-3 col-sm-7 col-sm-offset-5 content__name">
                             <div class="content__firstname">Артур</div>
                             <div class="content__lastname">Абелтиньш</div>
                         </div>
-                        <div class="col-md-2 col-md-offset-4 content__start">Начать</div>
+                        <div class="col-md-2 col-md-offset-2 col-lg-offset-3 col-sm-7 col-sm-offset-5 content__start">Начать</div>
                     </div>
-                    <div class="notifications col-md-7">
+                    <div class="notifications col-md-7 skills_disabled">
                         <div class="notifications__head">Уведомления</div>
                         <div class="notifications__body">
                             <ul class="notifications__list">
@@ -64,7 +65,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="friends col-md-4 col-md-offset-1">
+                    <div class="friends col-md-4 col-md-offset-1 skills_disabled">
                         <div class="friends__head"><span class="col-md-2">Друзья</span> <div class="friends__add col-md-9 col-md-offset-1"><input type="text" class="friends__input"><div class="friends__addbutton"><i class="zmdi zmdi-search"></i>find</div></div></div>
                         <div class="friends__body">
                             <ul class="friends__list">
@@ -77,7 +78,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-6 skills">
+                    <div class="col-md-6 skills skills_disabled">
                         <div class="skills__head">Мои навыки</div>
                         <div class="skills__body">
                             <ul class="skills__list">
@@ -92,6 +93,6 @@
 </div>
 	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
 	<script src="scripts/libs.min.js"></script>
-	<script src="scripts/common_main.js"></script>
+	<script src="scripts/common_profile.js"></script>
 </body>
 </html>

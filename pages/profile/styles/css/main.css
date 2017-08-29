@@ -118,7 +118,7 @@ body {
 
 .top-bar__notification {
   display: inline-block;
-  margin-right: 35px;
+  left: -20px;
   position: relative;
   top: -15px; }
   .top-bar__notification i {
@@ -423,8 +423,10 @@ body {
   .skills__item:last-child {
     border: 1px dashed #eee;
     background-color: transparent;
-    color: #eeeeee;
-    cursor: pointer; }
+    color: #eeeeee; }
 
 .skills__proof {
   background-color: #b8ffa0; }
+
+.skills_disabled {
+  cursor: not-allowed; }

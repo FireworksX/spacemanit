@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>Spaceman IT - запрограммируй свой мозг</title>
 	<link rel="stylesheet" href="pages/app/styles/css/libs.min.css">
 	<link rel="stylesheet" href="pages/app/styles/css/reset.css">
 	<link rel="stylesheet" href="pages/app/styles/css/main.css">
 </head>
 <body>
-<div id="particles-js"></div>
 <div class="modal">
     <div class="modal__body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium adipisci corporis cum cupiditate earum et explicabo itaque iusto labore magni maxime necessitatibus numquam optio, qui quo quos voluptatibus? Aspernatur, unde!</div>
 </div>
@@ -86,6 +85,7 @@
 		<div class="add__button">Добавить</div>
 	</div>
 </div>
+<div id="particles-js"></div>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
 	<script src="pages/app/scripts/libs.min.js"></script>
