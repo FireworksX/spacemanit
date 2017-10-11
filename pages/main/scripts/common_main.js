@@ -136,7 +136,7 @@
         $('.recovery').fadeIn();
         $('.main__register').hide();
         $('.main__recovery').text('Я знаю свои данные!');
-        $('.main__start').text('Востановить');
+        $('.main__start').text('Восстановить');
         recovery = 1;
         return type = 'recovery';
       });
